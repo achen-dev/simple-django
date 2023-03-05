@@ -1,0 +1,18 @@
+{% extends 'blog/bootstrap.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block bootstrap5_content %}
+    <div class="container">
+        <h1>{% block title %}Simple API Playground{% endblock %}</h1>
+
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'apiPlayground' %}">API Playground</a></li>
+        </ul>
+
+        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+    </div>
+
+    {% block content %}{% endblock %}
+{% endblock %}

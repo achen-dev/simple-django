@@ -1,0 +1,31 @@
+{% extends 'blog/home.html' %}
+{% load django_bootstrap5 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      Numbers API response
+    </div>
+    <div class="col-sm">
+      One of three columns
+    </div>
+    <div class="col-sm">
+      One of three columns
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      {% if numbersAPI %}
+      {{ numbersAPI }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
