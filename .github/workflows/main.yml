@@ -24,6 +24,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install Django django-bootstrap5
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: checkout repo
+        uses: actions/checkout@v2.3.4
       - name: Run Tests
         run: |
           python simple-django/simplesite/manage.py test blog
