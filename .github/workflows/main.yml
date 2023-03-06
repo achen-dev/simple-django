@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - test
-      
-env:
-  MANAGE_DIR: simple-django/simplesite
     
 jobs:
   my_job:
@@ -29,11 +26,9 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: checkout repo
         uses: actions/checkout@v2.3.4
-        with:
-          repository: achen-dev/simple-django
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: ${{ env.DEVOPS_DIR }}
+        
       - name: Run Tests
+        working-directory: /simplesite
         run: |
           python manage.py test blog
         
