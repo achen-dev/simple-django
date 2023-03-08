@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.views.generic import FormView
 from django.contrib import messages
-from .forms import BasicForm
+from .forms import NumberForm, MLForm
 import requests
 
 
@@ -21,7 +21,7 @@ class HomePageView(TemplateView):
 
 class APIPlaygroundView(FormView):
     template_name = "blog/apiPlayground.html"
-    form_class = BasicForm
+    form_class = NumberForm
     success_url = "/apiPlayground"
 
     def get_context_data(self, **kwargs):
@@ -45,5 +45,8 @@ class APIPlaygroundView(FormView):
             return api_response.text
 
 
-class APIResultView(TemplateView):
-    template_name = "blog/apiResults.html"
+class MachineLearningDemoView(FormView):
+    template_name = "blog/MLDemo.html"
+    form_class = MLForm
+    success_url = "/MLDemo"
+
