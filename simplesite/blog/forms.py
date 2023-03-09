@@ -14,12 +14,16 @@ class NumberForm(forms.Form):
 class MLForm(forms.Form):
 
     age = forms.IntegerField(
+        label="Your age when boarding the titanic",
         max_value=200,
         min_value=0,
-        help_text="Please enter your age"
+        help_text="Please enter your age",
+        initial="0"
     )
     cabin = forms.CharField(
         help_text="Please enter your desired cabin"
     )
+
+    file = forms.FileField()
 
 
