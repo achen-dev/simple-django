@@ -1,9 +1,10 @@
 from torchvision.models import resnet50, ResNet50_Weights
-from torchvision.io import read_image
+from torchvision.io import decode_image
+import torch
 
-
-def predict_image(image_path):
-    img = read_image(image_path)
+def predict_image(image_data):
+    tensor_data = torch.frombuffer(image_data, dtype=torch.uint8)
+    img = decode_image(tensor_data)
     weights = ResNet50_Weights.DEFAULT
     model = resnet50(weights=weights)
     model.eval()

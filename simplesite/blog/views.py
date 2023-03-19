@@ -80,20 +80,20 @@ class MachineLearningDemoView(FormView):
 
     def handle_uploaded_file(self, f):
         """
-        Main issue at this point is the inability to fucking choose between two stupid ass piece of shit options
-        Option fucking 1:
-            Store the stupid dumb fuck arse file in the server somewhere:
-                it needs to fucking be in static
-                we need to fucking make sure the names are different so add a stupid fucking hex or something
-                also this isn't great because there's still a stupid chance that too many users upload files at
-                    the same dumb fuck time and overload the server (unlikely though)
-            Run machine learning code on the dumb fuck file
-            Figure out how to fucking retrieve it from the fucking django server files to show to user
-            Delete cunt arse file from stupid dumb fuck folder
+        Main issue at this point is the inability to  choose between two options
+        Option  1:
+            Store the file in the server somewhere:
+                it needs to be in static
+                we need to make sure the names are different so add a hex or something
+                also this isn't great because there's still a  chance that too many users upload files at
+                    the same time and overload the server (unlikely though)
+            Run machine learning code on the file
+            Figure out how to retrieve it from thedjango server files to show to user
+            Delete file from folder
 
         Option fucking 2:
-            Don't store the file anywhere, fucking keep it in memory or some shit
-            When we upload the file, send it as a raw data stream to the ML code (FUCKING DIFFICULT)
+            Don't store the file anywhere, keep it in memory or some shit
+            When we upload the file, send it as a raw data stream to the ML code (DIFFICULT)
             Then somehow display that in memory image to the user
             Avoids the entire storage issue
 
@@ -102,11 +102,10 @@ class MachineLearningDemoView(FormView):
         """
         print(type(f))
         data = f.read()
-        print(data)
+        print(type(data))
         encoded = b64encode(data)
         mime = "image/jpeg"
         mime = mime + ";" if mime else ";"
         imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
-        print(imgpath)
-        classification, score = 1, 1
+        classification, score = predict_image(data)
         return imgpath, classification, score
