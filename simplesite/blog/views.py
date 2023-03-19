@@ -6,6 +6,12 @@ from django.http import HttpResponseRedirect
 import requests
 from django.shortcuts import render, redirect
 import os
+from .MLCode import predict_image
+from django.core.files.images import ImageFile
+from django.core.files.storage import default_storage
+from django.core.files import File
+from base64 import b64encode
+
 
 # API LINKS
 NUMBERS_API_LINK = "http://numbersapi.com/"
@@ -64,14 +70,43 @@ class MachineLearningDemoView(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
-            self.handle_uploaded_file(request.FILES['file'])
-            return redirect(self.success_url)
+            imgpath, classification, score = self.handle_uploaded_file(request.FILES['image'])
+            return render(request, self.template_name, {'form': form,
+                                                        'image': imgpath,
+                                                        'classification': classification,
+                                                        'score': score})
         else:
             return render(request, self.template_name, {'form': form})
 
-    def handle_uploaded_file(self,f):
-        print(os.getcwd())
-        with open("blog/files/test.png", "wb+") as destination:
-            for chunk in f.chunks():
-                destination.write(chunk)
+    def handle_uploaded_file(self, f):
+        """
+        Main issue at this point is the inability to fucking choose between two stupid ass piece of shit options
+        Option fucking 1:
+            Store the stupid dumb fuck arse file in the server somewhere:
+                it needs to fucking be in static
+                we need to fucking make sure the names are different so add a stupid fucking hex or something
+                also this isn't great because there's still a stupid chance that too many users upload files at
+                    the same dumb fuck time and overload the server (unlikely though)
+            Run machine learning code on the dumb fuck file
+            Figure out how to fucking retrieve it from the fucking django server files to show to user
+            Delete cunt arse file from stupid dumb fuck folder
 
+        Option fucking 2:
+            Don't store the file anywhere, fucking keep it in memory or some shit
+            When we upload the file, send it as a raw data stream to the ML code (FUCKING DIFFICULT)
+            Then somehow display that in memory image to the user
+            Avoids the entire storage issue
+
+        :param f:
+        :return:
+        """
+        print(type(f))
+        data = f.read()
+        print(data)
+        encoded = b64encode(data)
+        mime = "image/jpeg"
+        mime = mime + ";" if mime else ";"
+        imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
+        print(imgpath)
+        classification, score = 1, 1
+        return imgpath, classification, score
