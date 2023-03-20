@@ -1,8 +1,16 @@
 from django.views.generic.base import TemplateView
 from django.views.generic import FormView
 from django.contrib import messages
-from .forms import BasicForm
+from .forms import NumberForm, MLForm
+from django.http import HttpResponseRedirect
 import requests
+from django.shortcuts import render, redirect
+import os
+from .MLCode import predict_image
+from django.core.files.images import ImageFile
+from django.core.files.storage import default_storage
+from django.core.files import File
+from base64 import b64encode
 
 
 # API LINKS
@@ -21,7 +29,7 @@ class HomePageView(TemplateView):
 
 class APIPlaygroundView(FormView):
     template_name = "blog/apiPlayground.html"
-    form_class = BasicForm
+    form_class = NumberForm
     success_url = "/apiPlayground"
 
     def get_context_data(self, **kwargs):
@@ -34,6 +42,7 @@ class APIPlaygroundView(FormView):
         context["numbersAPI"] = self.post_to_api(form_text, NUMBERS_API_LINK)
         context["pokemonAPI"] = self.post_to_api(form_text, POKEMON_API_LINK)
         context["mathAPI"] = self.post_to_api(form_text+"/math", NUMBERS_API_LINK)
+        messages.info(self.request, "Data successfully posted to APIs")
         return self.render_to_response(context=context)
 
     def post_to_api(self, form_input, api_link):
@@ -45,5 +54,58 @@ class APIPlaygroundView(FormView):
             return api_response.text
 
 
-class APIResultView(TemplateView):
-    template_name = "blog/apiResults.html"
+class MachineLearningDemoView(FormView):
+    template_name = "blog/MLDemo.html"
+    form_class = MLForm
+    success_url = "/MLDemo"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            imgpath, classification, score = self.handle_uploaded_file(request.FILES['image'])
+            return render(request, self.template_name, {'form': form,
+                                                        'image': imgpath,
+                                                        'classification': classification,
+                                                        'score': score})
+        else:
+            return render(request, self.template_name, {'form': form})
+
+    def handle_uploaded_file(self, f):
+        """
+        Main issue at this point is the inability to  choose between two options
+        Option  1:
+            Store the file in the server somewhere:
+                it needs to be in static
+                we need to make sure the names are different so add a hex or something
+                also this isn't great because there's still a  chance that too many users upload files at
+                    the same time and overload the server (unlikely though)
+            Run machine learning code on the file
+            Figure out how to retrieve it from thedjango server files to show to user
+            Delete file from folder
+
+        Option fucking 2:
+            Don't store the file anywhere, keep it in memory or some shit
+            When we upload the file, send it as a raw data stream to the ML code (DIFFICULT)
+            Then somehow display that in memory image to the user
+            Avoids the entire storage issue
+
+        :param f:
+        :return:
+        """
+        print(type(f))
+        data = f.read()
+        print(type(data))
+        encoded = b64encode(data)
+        mime = "image/jpeg"
+        mime = mime + ";" if mime else ";"
+        imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
+        classification, score = predict_image(data)
+        return imgpath, classification, score

@@ -7,13 +7,14 @@
 
 {% block content %}
 
- <form role="form" method="post">
-     {% csrf_token %}
-     {% bootstrap_form form %}
-     <button type="submit" class="btn btn-primary">
-      Submit
-    </button>
- </form>
+<div class="container-md">
+    <form role="form" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
 
 <div class="container">
   <div class="row">
