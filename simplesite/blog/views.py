@@ -107,6 +107,7 @@ class MachineLearningDemoView(FormView):
         encoded = b64encode(data)
         mime = "image/jpeg"
         mime = mime + ";" if mime else ";"
-        imgpath = "data:%sbase64,%s" % (mime, str(detect_image(data))[2:-1])
+        # imgpath = "data:%sbase64,%s" % (mime, str(detect_image(data))[2:-1]) # Implements the detection code
+        imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
         classification, score = predict_image(data)
         return imgpath, classification, score
