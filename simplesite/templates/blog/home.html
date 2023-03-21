@@ -11,7 +11,9 @@
             <li class="nav-item"><a class="nav-link" href="{% url 'apiPlayground' %}">API Playground</a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'MLDemo' %}">ML Demo</a></li>
         </ul>
-
+        {% if user.is_authenticated %}
+        <h2>You are logged in</h2>
+        {% endif %}
         {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
     </div>
 
