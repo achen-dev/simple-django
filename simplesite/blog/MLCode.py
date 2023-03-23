@@ -18,7 +18,7 @@ def predict_image(image_data):
     tensor_data = torch.frombuffer(image_data, dtype=torch.uint8)
     img = decode_image(tensor_data)
     weights = ResNet50_Weights.DEFAULT
-    model = resnet50(weights=weights)
+    model = torch.load('static/models/resnet.pth')
     model.eval()
     preprocess = weights.transforms()
 
@@ -37,7 +37,7 @@ def detect_image(image_data):
 
     # Step 1: Initialize model with the best available weights
     weights = FasterRCNN_ResNet50_FPN_V2_Weights.DEFAULT
-    model = fasterrcnn_resnet50_fpn_v2(weights=weights, box_score_thresh=0.9)
+    model = torch.load("static/models/CNN.pth")
     model.eval()
 
     # Step 2: Initialize the inference transforms

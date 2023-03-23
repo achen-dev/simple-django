@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1e8ac939-ab44-4395-ba2a-9646a7e83d57" name="Changes" comment="Localised models" />
+    <list default="true" id="1e8ac939-ab44-4395-ba2a-9646a7e83d57" name="Changes" comment="Localised models">
+      <change beforePath="$PROJECT_DIR$/simplesite/blog/MLCode.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/blog/MLCode.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
