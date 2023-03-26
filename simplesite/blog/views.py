@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 import requests
 from django.shortcuts import render, redirect
 import os
-from .MLCode import predict_image
+from .MLCode import predict_image, detect_image, buffer_to_torch
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
 from django.core.files import File
@@ -69,13 +69,16 @@ class MachineLearningDemoView(FormView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
-        if form.is_valid():
-            imgpath, classification, score = self.handle_uploaded_file(request.FILES['image'])
+        uploaded_image = request.FILES['image']
+        print(uploaded_image.name)
+        if form.is_valid() and uploaded_image.size < 5e6 and uploaded_image.name.endswith('.jpg'):
+            imgpath, classification, score = self.handle_uploaded_file(uploaded_image)
             return render(request, self.template_name, {'form': form,
                                                         'image': imgpath,
                                                         'classification': classification,
                                                         'score': score})
         else:
+            messages.error(self.request, "File too large or not jpg, must be under 5 Megabytes")
             return render(request, self.template_name, {'form': form})
 
     def handle_uploaded_file(self, f):
@@ -100,12 +103,12 @@ class MachineLearningDemoView(FormView):
         :param f:
         :return:
         """
-        print(type(f))
         data = f.read()
-        print(type(data))
         encoded = b64encode(data)
+        img_data = buffer_to_torch(data)
         mime = "image/jpeg"
         mime = mime + ";" if mime else ";"
-        imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
-        classification, score = predict_image(data)
+        imgpath = "data:%sbase64,%s" % (mime, str(detect_image(img_data))[2:-1]) # Implements the detection code
+        # imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
+        classification, score = predict_image(img_data)
         return imgpath, classification, score

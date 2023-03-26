@@ -13,7 +13,7 @@ class NumberForm(forms.Form):
 
 class MLForm(forms.Form):
     image = forms.FileField(
-        help_text="Please upload an image in .jpg format",
+        help_text="Please upload an image in .jpg format and is less than 5 Megabytes",
     )
 
 
