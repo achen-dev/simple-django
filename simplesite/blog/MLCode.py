@@ -14,6 +14,9 @@ from torchvision.transforms.functional import to_pil_image
 import base64
 from io import BytesIO
 
+# PIL Fonts
+from PIL import ImageFont
+
 
 def buffer_to_torch(web_data):
     tensor_data = torch.frombuffer(web_data, dtype=torch.uint8)
@@ -54,7 +57,7 @@ def detect_image(img):
     box = draw_bounding_boxes(img, boxes=prediction["boxes"],
                               labels=labels,
                               colors="red",
-                              font="static/fonts/arial",
+                              font="static/fonts/arial.ttf",
                               width=4, font_size=30)
     im = to_pil_image(box.detach())
     buffered = BytesIO()
