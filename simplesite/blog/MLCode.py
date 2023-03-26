@@ -54,7 +54,7 @@ def detect_image(img):
     box = draw_bounding_boxes(img, boxes=prediction["boxes"],
                               labels=labels,
                               colors="red",
-                              font="arial",
+                              font="static/fonts/arial",
                               width=4, font_size=30)
     im = to_pil_image(box.detach())
     buffered = BytesIO()

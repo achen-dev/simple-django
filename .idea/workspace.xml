@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1e8ac939-ab44-4395-ba2a-9646a7e83d57" name="Changes" comment="Localised models v2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/blog/MLCode.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/blog/MLCode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/blog/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="1e8ac939-ab44-4395-ba2a-9646a7e83d57" name="Changes" comment="Congregated tensor transformation" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -92,7 +88,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679615199040</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Congregated tensor transformation">
+      <created>1679873520324</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1679873520324</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -109,6 +112,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Localised models" />
     <MESSAGE value="Localised models v2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Localised models v2" />
+    <MESSAGE value="Congregated tensor transformation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Congregated tensor transformation" />
   </component>
 </project>
