@@ -14,9 +14,14 @@ from torchvision.transforms.functional import to_pil_image
 import base64
 from io import BytesIO
 
-def predict_image(image_data):
-    tensor_data = torch.frombuffer(image_data, dtype=torch.uint8)
-    img = decode_image(tensor_data)
+
+def buffer_to_torch(web_data):
+    tensor_data = torch.frombuffer(web_data, dtype=torch.uint8)
+    img_data = decode_image(tensor_data)
+    return img_data
+
+
+def predict_image(img):
     weights = ResNet50_Weights.DEFAULT
     model = torch.load('static/models/resnet.pth')
     model.eval()
@@ -31,10 +36,7 @@ def predict_image(image_data):
     return (category_name, score)
 
 
-def detect_image(image_data):
-    tensor_data = torch.frombuffer(image_data, dtype=torch.uint8)
-    img = decode_image(tensor_data)
-
+def detect_image(img):
     # Step 1: Initialize model with the best available weights
     weights = FasterRCNN_ResNet50_FPN_V2_Weights.DEFAULT
     model = torch.load("static/models/CNN.pth")

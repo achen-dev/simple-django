@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 import requests
 from django.shortcuts import render, redirect
 import os
-from .MLCode import predict_image, detect_image
+from .MLCode import predict_image, detect_image, buffer_to_torch
 from django.core.files.images import ImageFile
 from django.core.files.storage import default_storage
 from django.core.files import File
@@ -105,9 +105,10 @@ class MachineLearningDemoView(FormView):
         """
         data = f.read()
         encoded = b64encode(data)
+        img_data = buffer_to_torch(data)
         mime = "image/jpeg"
         mime = mime + ";" if mime else ";"
-        # imgpath = "data:%sbase64,%s" % (mime, str(detect_image(data))[2:-1]) # Implements the detection code
-        imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
-        classification, score = predict_image(data)
+        imgpath = "data:%sbase64,%s" % (mime, str(detect_image(img_data))[2:-1]) # Implements the detection code
+        # imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
+        classification, score = predict_image(img_data)
         return imgpath, classification, score
