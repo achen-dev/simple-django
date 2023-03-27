@@ -1,16 +1,12 @@
 from django.views.generic.base import TemplateView
 from django.views.generic import FormView
 from django.contrib import messages
-from .forms import NumberForm, MLForm
-from django.http import HttpResponseRedirect
+from .forms import NumberForm, MLForm, NewUserForm
 import requests
 from django.shortcuts import render, redirect
-import os
 from .MLCode import predict_image, detect_image, buffer_to_torch
-from django.core.files.images import ImageFile
-from django.core.files.storage import default_storage
-from django.core.files import File
 from base64 import b64encode
+from django.contrib.auth import login
 
 
 # API LINKS
@@ -23,8 +19,12 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        messages.info(self.request, "Welcome to the site")
         return context
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            messages.info(self.request, "Welcome to the site " + request.user.first_name)
+        return render(request, self.template_name)
 
 
 class APIPlaygroundView(FormView):
@@ -112,3 +112,16 @@ class MachineLearningDemoView(FormView):
         # imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
         classification, score = predict_image(img_data)
         return imgpath, classification, score
+
+
+def register_request(request):
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            return redirect("/")
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+    form = NewUserForm()
+    return render(request=request, template_name="registration/register.html", context={"register_form": form})
