@@ -8,6 +8,7 @@
 	<h1>Register</h1>
 	<form method="POST">
 		{% csrf_token %}
+		{% bootstrap_messages %}
 		{% bootstrap_form register_form %}
 		<button class="btn btn-primary" type="submit">Register</button>
 	</form>
