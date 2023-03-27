@@ -10,7 +10,7 @@ jobs:
     name: Test Blog
     runs-on: ubuntu-18.04
     env: 
-      SECRET_KEY: eec9c78703aadb790cfcdd50ac487b2e29c53b96ece00336b0
+      SECRET_KEY: non-prod-secret-12345678
       DEBUG: True
       
     strategy:
