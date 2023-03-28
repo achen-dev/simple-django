@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
-from django.views.generic import FormView, ListView, DetailView
+from django.views.generic import FormView, ListView
 from django.contrib import messages
-from .forms import NumberForm, MLForm, NewUserForm
+from .forms import NumberForm, MLForm, NewUserForm, CommentForm
 import requests
 from django.shortcuts import render, redirect
 from .MLCode import predict_image, detect_image, buffer_to_torch
@@ -95,7 +95,7 @@ class MachineLearningDemoView(FormView):
         img_data = buffer_to_torch(data)
         mime = "image/jpeg"
         mime = mime + ";" if mime else ";"
-        imgpath = "data:%sbase64,%s" % (mime, str(detect_image(img_data))[2:-1]) # Implements the detection code
+        imgpath = "data:%sbase64,%s" % (mime, str(detect_image(img_data))[2:-1])  # Implements the detection code
         # imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
         classification, score = predict_image(img_data)
         return imgpath, classification, score
@@ -121,13 +121,31 @@ class BlogFeedView(ListView):
 
 class BlogDetailView(TemplateView):
     template_name = "blog/blogDetail.html"
+    comment_form_class = CommentForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = Post.objects.get(slug=self.kwargs['slug'])
-        context['post'] = post
+        form = CommentForm()
+        current_post = Post.objects.get(slug=self.kwargs['slug'])
+        context['post'] = current_post
+        context['form'] = form
         try:
-            context['commentList'] = Comment.objects.filter(status=1, post=post).order_by('-created_on')
+            context['commentList'] = Comment.objects.filter(status=1, post=current_post).order_by('-created_on')
         except:
             context['commentList'] = []
         return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        form = context['form']
+        current_post = Post.objects.get(slug=self.kwargs['slug'])
+        if form.is_valid:
+            print(form)
+            content = request.POST.get('content')
+            if content is not None:
+                print(content)
+                comment_object = Comment(post=current_post, content=content, author=request.user, status=1)
+                comment_object.save()
+                messages.info(self.request, "Comment successfully posted")
+                return redirect('blogDetail', slug=self.kwargs['slug'])
+        return super(TemplateView, self).render_to_response(context)
