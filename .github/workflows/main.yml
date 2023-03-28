@@ -9,6 +9,10 @@ jobs:
   my_job:
     name: Test Blog
     runs-on: ubuntu-18.04
+    env: 
+      SECRET_KEY: non-prod-secret-12345678
+      DEBUG: True
+      
     strategy:
       matrix:
         python-version: ["3.10"]
