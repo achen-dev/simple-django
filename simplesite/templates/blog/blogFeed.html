@@ -1,0 +1,23 @@
+{% extends 'blog/navBar.html' %}
+{% load django_bootstrap5 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% block content %}
+<div class="container">
+
+    {% for post in post_list %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">{{ post.title }}</h2>
+            <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+            <p class="card-text">{{post.content|slice:":200" }}</p>
+            <a href="{% url 'blogDetail' post.slug  %}" class="btn btn-primary">Read More &rarr;</a>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

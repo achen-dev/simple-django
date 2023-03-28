@@ -7,11 +7,15 @@ from .views import (
     APIPlaygroundView,
     MachineLearningDemoView,
     register_request,
+    BlogFeedView,
+    BlogDetailView,
 )
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
     path("apiPlayground", APIPlaygroundView.as_view(), name="apiPlayground"),
     path("MLDemo", MachineLearningDemoView.as_view(), name="MLDemo"),
-    path("accounts/register", register_request, name="register")
+    path("accounts/register", register_request, name="register"),
+    path("blogFeed", BlogFeedView.as_view(), name="blogFeed"),
+    path('<slug:slug>/', BlogDetailView.as_view(), name='blogDetail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

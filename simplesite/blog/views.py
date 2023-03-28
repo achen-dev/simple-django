@@ -1,5 +1,5 @@
 from django.views.generic.base import TemplateView
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView, DetailView
 from django.contrib import messages
 from .forms import NumberForm, MLForm, NewUserForm
 import requests
@@ -7,11 +7,12 @@ from django.shortcuts import render, redirect
 from .MLCode import predict_image, detect_image, buffer_to_torch
 from base64 import b64encode
 from django.contrib.auth import login
-
+from .models import *
 
 # API LINKS
 NUMBERS_API_LINK = "http://numbersapi.com/"
 POKEMON_API_LINK = "https://pokeapi.co/api/v2/pokemon/"
+
 
 # Create your views here.
 class HomePageView(TemplateView):
@@ -22,8 +23,6 @@ class HomePageView(TemplateView):
         return context
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            messages.info(self.request, "Welcome to the site " + request.user.first_name)
         return render(request, self.template_name)
 
 
@@ -83,20 +82,8 @@ class MachineLearningDemoView(FormView):
 
     def handle_uploaded_file(self, f):
         """
-        Main issue at this point is the inability to  choose between two options
-        Option  1:
-            Store the file in the server somewhere:
-                it needs to be in static
-                we need to make sure the names are different so add a hex or something
-                also this isn't great because there's still a  chance that too many users upload files at
-                    the same time and overload the server (unlikely though)
-            Run machine learning code on the file
-            Figure out how to retrieve it from thedjango server files to show to user
-            Delete file from folder
-
-        Option fucking 2:
-            Don't store the file anywhere, keep it in memory or some shit
-            When we upload the file, send it as a raw data stream to the ML code (DIFFICULT)
+            Don't store the file anywhere, keep it in memory
+            When we upload the file, send it as a raw data stream to the ML code (DIFFICULT[BUT WE SOLVED IT LEESSSGOO])
             Then somehow display that in memory image to the user
             Avoids the entire storage issue
 
@@ -121,7 +108,26 @@ def register_request(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful.")
-            return redirect("/")
+            return render(request=request, template_name="blog/home.html", context={"register_form": form})
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
     return render(request=request, template_name="registration/register.html", context={"register_form": form})
+
+
+class BlogFeedView(ListView):
+    template_name = "blog/blogFeed.html"
+    queryset = Post.objects.filter(status=1).order_by('-created_on')
+
+
+class BlogDetailView(TemplateView):
+    template_name = "blog/blogDetail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = Post.objects.get(slug=self.kwargs['slug'])
+        context['post'] = post
+        try:
+            context['commentList'] = Comment.objects.filter(status=1, post=post).order_by('-created_on')
+        except:
+            context['commentList'] = []
+        return context
