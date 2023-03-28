@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1e8ac939-ab44-4395-ba2a-9646a7e83d57" name="Changes" comment="Fixed Login and Requirements">
-      <change afterPath="$PROJECT_DIR$/BlogDesign.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simplesite/templates/blog/blogDetail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simplesite/templates/blog/blogFeed.html" afterDir="false" />
+    <list default="true" id="1e8ac939-ab44-4395-ba2a-9646a7e83d57" name="Changes" comment="Added Blog Functionality:&#10;New Post and Comment Models&#10;New BlogView and BlogDetail Views">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/blog/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/blog/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/blog/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/blog/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/blog/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/blog/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/blog/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/templates/blog/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/templates/blog/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simplesite/templates/blog/navBar.html" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/templates/blog/navBar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simplesite/simplesite/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/simplesite/simplesite/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,21 +41,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/chenh/Downloads/github-copilot-intellij-1.2.4.2459.zip&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "E:/Gitrepository/simple-django/simplesite/simplesite/static/models",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Python&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Gitrepository\simple-django\simplesite\simplesite\static\models" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Gitrepository\simple-django\simplesite\static\models" />
       <recent name="E:\Gitrepository\simple-django\simplesite\static" />
@@ -177,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679886730098</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added Blog Functionality:&#10;New Post and Comment Models&#10;New BlogView and BlogDetail Views">
+      <created>1679964685461</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1679964685461</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -197,6 +199,7 @@
     <MESSAGE value="Congregated tensor transformation" />
     <MESSAGE value="Added login functionality" />
     <MESSAGE value="Fixed Login and Requirements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Login and Requirements" />
+    <MESSAGE value="Added Blog Functionality:&#10;New Post and Comment Models&#10;New BlogView and BlogDetail Views" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Blog Functionality:&#10;New Post and Comment Models&#10;New BlogView and BlogDetail Views" />
   </component>
 </project>
