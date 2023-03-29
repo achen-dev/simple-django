@@ -1,0 +1,15 @@
+{
+  "name": "Better Together",
+  "short_name": "Better Together",
+  "id": "com.example.gamename",
+  "description": "A local co-op platformer where two defective robots embark on a quest to find a scientist who can repair them. The robots, who narrowly escaped incineration, must work together by separating and connecting to navigate through a series of challenging levels filled with obstacles, traps and enemies.\n\nPlayers can control the robot either using a single keyboard (WASD and Arrow Buttons) or using the on-screen touch controls or both. The game can be played alone, but as the game title suggests, it is better played together!\n\nItch.io Link: https://aussar.itch.io/better-together\n\nGitHub Link: https://github.com/chuahxinyu/better-together-game",
+  "orientation": "landscape",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "black",
+  "categories": ["games", "entertainment"],
+  "icons": [{
+        "src": "Icon.png",
+        "sizes": "512x512"
+      }]
+}
