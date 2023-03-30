@@ -149,3 +149,14 @@ class BlogDetailView(TemplateView):
                 messages.info(self.request, "Comment successfully posted")
                 return redirect('blogDetail', slug=self.kwargs['slug'])
         return super(TemplateView, self).render_to_response(context)
+
+
+class GameView(TemplateView):
+    """
+    Create view for hosting a html5 game
+    """
+    template_name = "blog/game.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
