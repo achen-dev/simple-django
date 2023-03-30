@@ -1,0 +1,21 @@
+{% extends 'blog/navBar.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Better Together</h1>
+                <p>Made together with the amazing UNIX</p>
+            </div>
+        </div>
+    </div>
+    <div>
+    <iframe src= "{% static 'betterTogether/index.html' %}" style="width: 100%; height: 1000px; position:relative;"
+            title="Better Together"></iframe>
+    </div>
+{% endblock %}

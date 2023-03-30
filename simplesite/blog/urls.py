@@ -9,6 +9,7 @@ from .views import (
     register_request,
     BlogFeedView,
     BlogDetailView,
+    GameView
 )
 
 urlpatterns = [
@@ -18,4 +19,5 @@ urlpatterns = [
     path("accounts/register", register_request, name="register"),
     path("blogFeed", BlogFeedView.as_view(), name="blogFeed"),
     path('<slug:slug>/', BlogDetailView.as_view(), name='blogDetail'),
+    path('game', GameView.as_view(), name='game'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
