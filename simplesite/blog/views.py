@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
-from django.views.generic import FormView, ListView
+from django.views.generic import FormView, ListView, UpdateView, CreateView
 from django.contrib import messages
-from .forms import NumberForm, MLForm, NewUserForm, CommentForm
+from .forms import NumberForm, MLForm, NewUserForm, CommentForm, PostForm
 import requests
 from django.shortcuts import render, redirect
 from .MLCode import predict_image, detect_image, buffer_to_torch
@@ -150,6 +150,13 @@ class BlogDetailView(TemplateView):
                 return redirect('blogDetail', slug=self.kwargs['slug'])
         return super(TemplateView, self).render_to_response(context)
 
+
+class BlogUpdateView(UpdateView):
+    model = Post
+    form = PostForm
+    template_name = "blog/blogUpdate.html"
+    fields = ['title', 'content', 'status']
+    success_url = "/blogFeed"
 
 class GameView(TemplateView):
     """
