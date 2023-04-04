@@ -41,9 +41,14 @@ class CommentForm(forms.ModelForm):
         fields = ('content',)
 
 
-class PostForm(forms.ModelForm):
+class BlogUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Post
         fields = ('title', 'content', 'status')
 
+
+class BlogCreateForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'content', 'status')

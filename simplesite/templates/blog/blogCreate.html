@@ -1,0 +1,29 @@
+{% extends 'blog/navBar.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.title.errors }}
+        {{ form.title.label_tag }}
+        {{ form.title }}
+        <br>
+        {{ form.content.errors }}
+        {{ form.content.label_tag }}
+        {{ form.content }}
+        <br>
+        {{ form.status.errors }}
+        {{ form.status.label_tag }}
+        {{ form.status }}
+        <input type="submit" value="Create" class="btn btn-primary">
+
+    </form>
+{% else %}
+    <p class="text-muted">You are not logged in</p>
+{% endif %}
+{% endblock %}

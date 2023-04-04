@@ -1,13 +1,14 @@
 from django.views.generic.base import TemplateView
 from django.views.generic import FormView, ListView, UpdateView, CreateView
 from django.contrib import messages
-from .forms import NumberForm, MLForm, NewUserForm, CommentForm, PostForm
+from .forms import NumberForm, MLForm, NewUserForm, CommentForm, BlogUpdateForm, BlogCreateForm
 import requests
 from django.shortcuts import render, redirect
 from .MLCode import predict_image, detect_image, buffer_to_torch
 from base64 import b64encode
 from django.contrib.auth import login
 from .models import *
+from .utils import slugify
 
 # API LINKS
 NUMBERS_API_LINK = "http://numbersapi.com/"
@@ -153,10 +154,33 @@ class BlogDetailView(TemplateView):
 
 class BlogUpdateView(UpdateView):
     model = Post
-    form = PostForm
+    form = BlogCreateForm
     template_name = "blog/blogUpdate.html"
     fields = ['title', 'content', 'status']
     success_url = "/blogFeed"
+
+
+class BlogCreateView(TemplateView):
+    template_name = "blog/blogCreate.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = BlogCreateForm()
+        context['form'] = form
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        form = BlogCreateForm(request.POST)
+        if form.is_valid():
+            post_object = Post(title=request.POST.get('title'), content=request.POST.get('content'),
+                               status=request.POST.get('status'), author=request.user,
+                               slug=slugify(request.POST.get('title')))
+            post_object.save()
+            messages.info(self.request, "Blog successfully created")
+            return redirect('blogFeed')
+        return super(TemplateView, self).render_to_response(context)
+
 
 class GameView(TemplateView):
     """
