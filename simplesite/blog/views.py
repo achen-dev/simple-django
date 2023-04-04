@@ -1,21 +1,19 @@
 from django.views.generic.base import TemplateView
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView, UpdateView, CreateView
 from django.contrib import messages
-from .forms import NumberForm, MLForm
-from django.http import HttpResponseRedirect
+from .forms import NumberForm, MLForm, NewUserForm, CommentForm, BlogUpdateForm, BlogCreateForm
 import requests
 from django.shortcuts import render, redirect
-import os
 from .MLCode import predict_image, detect_image, buffer_to_torch
-from django.core.files.images import ImageFile
-from django.core.files.storage import default_storage
-from django.core.files import File
 from base64 import b64encode
-
+from django.contrib.auth import login
+from .models import *
+from .utils import slugify
 
 # API LINKS
 NUMBERS_API_LINK = "http://numbersapi.com/"
 POKEMON_API_LINK = "https://pokeapi.co/api/v2/pokemon/"
+
 
 # Create your views here.
 class HomePageView(TemplateView):
@@ -23,8 +21,10 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        messages.info(self.request, "Welcome to the site")
         return context
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 
 class APIPlaygroundView(FormView):
@@ -83,20 +83,8 @@ class MachineLearningDemoView(FormView):
 
     def handle_uploaded_file(self, f):
         """
-        Main issue at this point is the inability to  choose between two options
-        Option  1:
-            Store the file in the server somewhere:
-                it needs to be in static
-                we need to make sure the names are different so add a hex or something
-                also this isn't great because there's still a  chance that too many users upload files at
-                    the same time and overload the server (unlikely though)
-            Run machine learning code on the file
-            Figure out how to retrieve it from thedjango server files to show to user
-            Delete file from folder
-
-        Option fucking 2:
-            Don't store the file anywhere, keep it in memory or some shit
-            When we upload the file, send it as a raw data stream to the ML code (DIFFICULT)
+            Don't store the file anywhere, keep it in memory
+            When we upload the file, send it as a raw data stream to the ML code (DIFFICULT[BUT WE SOLVED IT LEESSSGOO])
             Then somehow display that in memory image to the user
             Avoids the entire storage issue
 
@@ -108,7 +96,98 @@ class MachineLearningDemoView(FormView):
         img_data = buffer_to_torch(data)
         mime = "image/jpeg"
         mime = mime + ";" if mime else ";"
-        imgpath = "data:%sbase64,%s" % (mime, str(detect_image(img_data))[2:-1]) # Implements the detection code
+        imgpath = "data:%sbase64,%s" % (mime, str(detect_image(img_data))[2:-1])  # Implements the detection code
         # imgpath = "data:%sbase64,%s" % (mime, str(encoded)[2:-1])
         classification, score = predict_image(img_data)
         return imgpath, classification, score
+
+
+def register_request(request):
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            return render(request=request, template_name="blog/home.html", context={"register_form": form})
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+    form = NewUserForm()
+    return render(request=request, template_name="registration/register.html", context={"register_form": form})
+
+
+class BlogFeedView(ListView):
+    template_name = "blog/blogFeed.html"
+    queryset = Post.objects.filter(status=1).order_by('-created_on')
+
+
+class BlogDetailView(TemplateView):
+    template_name = "blog/blogDetail.html"
+    comment_form_class = CommentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = CommentForm()
+        current_post = Post.objects.get(slug=self.kwargs['slug'])
+        context['post'] = current_post
+        context['form'] = form
+        try:
+            context['commentList'] = Comment.objects.filter(status=1, post=current_post).order_by('-created_on')
+        except:
+            context['commentList'] = []
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        form = context['form']
+        current_post = Post.objects.get(slug=self.kwargs['slug'])
+        if form.is_valid:
+            print(form)
+            content = request.POST.get('content')
+            if content is not None:
+                print(content)
+                comment_object = Comment(post=current_post, content=content, author=request.user, status=1)
+                comment_object.save()
+                messages.info(self.request, "Comment successfully posted")
+                return redirect('blogDetail', slug=self.kwargs['slug'])
+        return super(TemplateView, self).render_to_response(context)
+
+
+class BlogUpdateView(UpdateView):
+    model = Post
+    form = BlogCreateForm
+    template_name = "blog/blogUpdate.html"
+    fields = ['title', 'content', 'status']
+    success_url = "/blogFeed"
+
+
+class BlogCreateView(TemplateView):
+    template_name = "blog/blogCreate.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = BlogCreateForm()
+        context['form'] = form
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        form = BlogCreateForm(request.POST)
+        if form.is_valid():
+            post_object = Post(title=request.POST.get('title'), content=request.POST.get('content'),
+                               status=request.POST.get('status'), author=request.user,
+                               slug=slugify(request.POST.get('title')))
+            post_object.save()
+            messages.info(self.request, "Blog successfully created")
+            return redirect('blogFeed')
+        return super(TemplateView, self).render_to_response(context)
+
+
+class GameView(TemplateView):
+    """
+    Create view for hosting a html5 game
+    """
+    template_name = "blog/game.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context

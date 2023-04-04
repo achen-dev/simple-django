@@ -1,21 +1,20 @@
-{% extends 'blog/bootstrap.html' %}
+{% extends 'blog/navBar.html' %}
 
 {% load static %}
 {% load django_bootstrap5 %}
 
-{% block bootstrap5_content %}
+{% block content %}
     <div class="container">
-        <h1>{% block title %}Django Demo{% endblock %}</h1>
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'apiPlayground' %}">API Playground</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'MLDemo' %}">ML Demo</a></li>
-        </ul>
+<!--        If user is authenticated, show home page and all blog posts, along with a new blog post option-->
         {% if user.is_authenticated %}
-        <h2>You are logged in</h2>
-        {% endif %}
         {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
-    </div>
+        <h2>Hello {{ request.user.username }}</h2>
+        <a href="{% url 'logout' %}" class="btn btn-primary" type="button" >Logout</a>
 
-    {% block content %}{% endblock %}
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary" type="button" >Login</a>
+        <a href="{% url 'register' %}" class="btn btn-primary" type="button" >Register</a>
+        {% endif %}
+
+    </div>
 {% endblock %}

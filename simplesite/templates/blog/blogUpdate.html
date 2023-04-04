@@ -1,0 +1,20 @@
+{% extends 'blog/navBar.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+{% block content %}
+{{ user }}
+{{ post.author }}
+{% if user == post.author %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update">
+</form>
+{% else %}
+<p class="text-muted">You are not the author of this post</p>
+{% endif %}
+{% endblock %}

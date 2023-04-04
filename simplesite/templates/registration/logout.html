@@ -1,0 +1,12 @@
+{% extends 'blog/bootstrap.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+
+{% block bootstrap5_content %}
+<div class="container">
+    <h1>{% block title %}You are logged out{% endblock %}</h1>
+    <a href="{% url 'home' %}" class="btn btn-primary" type="button" >Home</a>
+</div>
+
+{% endblock%}

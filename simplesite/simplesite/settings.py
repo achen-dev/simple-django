@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zjqp6%l-k&o=978d1p#s&(1j96$&ey+cffe*csxvu15$6(g3qc'
+SECRET_KEY = config('DEBUG')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(config('DEBUG'))
 
 ALLOWED_HOSTS = ['*']
 
@@ -116,6 +119,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticprod')
 
 STATIC_URL = 'static/'
 
@@ -133,3 +139,6 @@ MEDIA_ROOT = "/uploads/"
 MEDIA_URL = "uploads/"
 
 LOGIN_REDIRECT_URL = "/"
+
+LOGOUT_REDIRECT_URL = "/"
+
