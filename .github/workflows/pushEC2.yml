@@ -1,0 +1,24 @@
+name: push-to-ec2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Push to EC2 Instance
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v1
+
+      - name: Deploy to EC2 Instance
+        uses: easingthemes/ssh-deploy@v4.1.8
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_KEY }}
+          SOURCE: "./"
+          REMOTE_HOST: ${{ secrets.EC2_REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.EC2_REMOTE_USER }}
+          TARGET: ${{ secrets.EC2_TARGET_DIR }}

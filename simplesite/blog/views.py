@@ -1,5 +1,5 @@
 from django.views.generic.base import TemplateView
-from django.views.generic import FormView, ListView, UpdateView, CreateView
+from django.views.generic import FormView, ListView, UpdateView, CreateView, DeleteView
 from django.contrib import messages
 from .forms import NumberForm, MLForm, NewUserForm, CommentForm, BlogUpdateForm, BlogCreateForm
 import requests
@@ -71,7 +71,7 @@ class MachineLearningDemoView(FormView):
         form = self.form_class(request.POST, request.FILES)
         uploaded_image = request.FILES['image']
         print(uploaded_image.name)
-        if form.is_valid() and uploaded_image.size < 5e6 and uploaded_image.name.endswith('.jpg'):
+        if uploaded_image.name.endswith('.jpg') and uploaded_image.size < 5e6 and form.is_valid():
             imgpath, classification, score = self.handle_uploaded_file(uploaded_image)
             return render(request, self.template_name, {'form': form,
                                                         'image': imgpath,
@@ -180,6 +180,11 @@ class BlogCreateView(TemplateView):
             messages.info(self.request, "Blog successfully created")
             return redirect('blogFeed')
         return super(TemplateView, self).render_to_response(context)
+
+
+class BlogDeleteView(DeleteView):
+    model = Post
+    success_url = "/blogFeed"
 
 
 class GameView(TemplateView):
