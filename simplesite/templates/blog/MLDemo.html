@@ -3,9 +3,9 @@
 {% load static %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
-{% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
 {% block content %}
+{% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 <div class="container-md">
     <form role="form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
