@@ -16,7 +16,7 @@ jobs:
 
       - name: Deploy to EC2 Instance
         uses: easingthemes/ssh-deploy@v4.1.8
-        env:
+        with:
           SSH_PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_KEY }}
           SOURCE: "./"
           REMOTE_HOST: ${{ secrets.EC2_REMOTE_HOST }}
