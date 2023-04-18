@@ -11,7 +11,7 @@ jobs:
     name: Push to EC2 Instance
     environment: Cloud Django Env
     runs-on: ubuntu-22.04
-
+    
     steps:
       - name: Check out the code
         uses: actions/checkout@v1
@@ -19,6 +19,7 @@ jobs:
       - name: Deploy to EC2 Instance
         uses: easingthemes/ssh-deploy@v4.1.8
         env:
+          SCRIPT_BEFORE: ls
           SSH_PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_KEY }}
           SOURCE: "./"
           REMOTE_HOST: ${{ secrets.EC2_REMOTE_HOST }}
