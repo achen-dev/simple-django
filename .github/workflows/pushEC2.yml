@@ -16,18 +16,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: Deploy in EC2
         env:
-          SCRIPT_BEFORE: ls
           SSH_PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_KEY }}
-          SOURCE: "./"
           REMOTE_HOST: ${{ secrets.EC2_REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.EC2_REMOTE_USER }}
-          TARGET: ${{ secrets.EC2_TARGET_DIR }}
         
         run: |    
           echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} '
           
-          cd ${TARGET} &&
+          cd /simple-django/simple-django &&
           git checkout main &&
           git fetch --all &&
           git reset --hard origin/main &&
