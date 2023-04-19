@@ -25,7 +25,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} 
           '
           ls
-          cd /simple-django/simple-django &&
+          cd simple-django/simple-django &&
           git checkout main &&
           git fetch --all &&
           git reset --hard origin/main &&
