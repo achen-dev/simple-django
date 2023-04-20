@@ -14,22 +14,28 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy in EC2
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+            HostName $REMOTE_HOST
+            User $REMOTE_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
         env:
           SSH_PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.EC2_REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.EC2_REMOTE_USER }}
-        
-        run: |    
-          echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} '
-          
-          cd /simple-django/simple-django &&
-          git checkout main &&
-          git fetch --all &&
-          git reset --hard origin/main &&
-          git pull origin main &&
-          sudo systemctl restart gunicorn
-          '
       
-  
+        
+      - name: Git pull from main branch
+        run: ssh staging 'cd ${{env.TARGET_DIR}} && git checkout main && git fetch --all && git reset --hard origin/main && git pull origin main'
+        env:
+          TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
+          
+      - name: Restart Gunicorn
+        run: ssh staging 'sudo systemctl restart gunicorn'
