@@ -37,7 +37,7 @@ jobs:
           TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
         
       - name: Git pull test
-        run: ssh staging 'git checkout main && git fetch --all && git reset --hard origin/main && git pull origin main'
+        run: ssh staging 'cd simple-django/simple-django && git checkout main && git fetch --all && git reset --hard origin/main && git pull origin main'
         
       - name: Restart Gunicorn
         run: ssh staging 'sudo systemctl restart gunicorn'
