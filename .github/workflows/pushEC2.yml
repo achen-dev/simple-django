@@ -32,7 +32,7 @@ jobs:
           REMOTE_USER: ${{ secrets.EC2_REMOTE_USER }}
         
       - name: Set working directory
-        run: ssh staging 'cd $TARGET_DIR'
+        run: ssh staging 'cd simple-django/simple-django && ls'
         env:
           TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
         
