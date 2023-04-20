@@ -71,7 +71,7 @@ class MachineLearningDemoView(FormView):
         form = self.form_class(request.POST, request.FILES)
         uploaded_image = request.FILES['image']
         print(uploaded_image.name)
-        if uploaded_image.name.endswith('.jpg') and uploaded_image.size < 5e6 and form.is_valid():
+        if uploaded_image.name.endswith(('.jpg', 'jpeg')) and uploaded_image.size < 5e6 and form.is_valid():
             imgpath, classification, score = self.handle_uploaded_file(uploaded_image)
             return render(request, self.template_name, {'form': form,
                                                         'image': imgpath,

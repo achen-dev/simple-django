@@ -7,13 +7,17 @@
 {% block content %}
 {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 <div class="container-md">
+    <h3>Upload an image below and the server will run ResNet50 on it to detect any items in the image,
+        and label them in boxes</h3>
+    <br>
+    Note that no images are ever stored on the server, and larger images will take some time to run.
     <form role="form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     {% if classification %}
-    <img src = {{ image }} width="500">
+    <img src = {{ image }} width="80%" class="rounded mx-auto d-block">
     <br>
     ResNet believes that this is a {{ classification }} with {{ score }} certainty
     {% endif %}
