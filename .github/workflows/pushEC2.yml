@@ -30,9 +30,15 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.EC2_REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.EC2_REMOTE_USER }}
+      
+      - name: ENV test
+        run: echo '$TARGET_DIR'
+        env:
+          TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
+         
         
       - name: Git pull from main branch
-        run: ssh staging 'cd $TARGET_DIR && git checkout main && git fetch --all && git reset --hard origin/main && git pull origin main'
+        run: ssh staging 'cd ${{env.TARGET_DIR}} && git checkout main && git fetch --all && git reset --hard origin/main && git pull origin main'
         env:
           TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
           
