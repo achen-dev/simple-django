@@ -2,13 +2,12 @@
 {% load django_bootstrap5 %}
 
 {% bootstrap_css %}
-{% bootstrap_javascript %}
 
 
 {% block content %}
 {% bootstrap_messages %}
 <div class="container">
-    <h1 class="my-4">Blog Feed</h1>
+    <h1 class="my-4" style="color:white">Blog Feed</h1>
     {% if user.is_authenticated %}
     <a href="{% url 'blogCreate' %}" class="btn btn-primary" type="button" >New Post</a>
     <br>

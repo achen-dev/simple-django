@@ -2,47 +2,65 @@
 {% load django_bootstrap5 %}
 
 {% bootstrap_css %}
-{% bootstrap_javascript %}
 
 {% block content %}
 {% bootstrap_messages %}
-<div class="container-md">
+<div class="container-md" style="text-color: white">
     <form role="form" method="post">
         {% csrf_token %}
         {% bootstrap_form form %}
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
-
+<br>
 
 <div class="container">
   <div class="row">
     <div class="col-sm">
-      Numbers API Response
-    </div>
-    <div class="col-sm">
-      Pokemon Response
-    </div>
-    <div class="col-sm">
-      Math Fact Response
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm">
-      {% if numbersAPI %}
-      {{ numbersAPI }}
-      {% endif %}
-    </div>
-    <div class="col-sm">
-      {% if pokemonAPI %}
-      {{ pokemonAPI }}
-      {% endif %}
-    </div>
-    <div class="col-sm">
-      {% if mathAPI %}
-      {{ mathAPI }}
-      {% endif %}
-    </div>
+      <div class ="card">
+        <div class="card-body">
+          <h5 class="card-title">Numbers API</h5>
+          <p class="card-text">
+            This API returns a random fact about a number.
+            {% if numbersAPI %}
+            <br>
+            <br>
+            {{ numbersAPI }}
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      </div>
+      <div class="col-sm">
+        <div class ="card">
+          <div class="card-body">
+            <h5 class="card-title">Pokemon API</h5>
+            <p class="card-text">
+              This API returns the pokemon corresponding to the search number.
+              {% if pokemonAPI %}
+              <br>
+              <br>
+              {{ pokemonAPI }}
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class ="card">
+          <div class="card-body">
+            <h5 class="card-title">Math API</h5>
+            <p class="card-text">
+              This API returns a random math fact.
+              {% if mathAPI %}
+              <br>
+              <br>
+              {{ mathAPI }}
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
 {% endblock %}

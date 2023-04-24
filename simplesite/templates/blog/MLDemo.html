@@ -7,10 +7,10 @@
 {% block content %}
 {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 <div class="container-md">
-    <h3>Upload an image below and the server will run ResNet50 on it to detect any items in the image,
+    <h3 style="color:white">Upload an image below and the server will run ResNet50 on it to detect any items in the image,
         and label them in boxes</h3>
     <br>
-    Note that no images are ever stored on the server, and larger images will take some time to run.
+    <p style="color:white"> Note that no images are ever stored on the server, and larger images will take some time to run.</p>
     <form role="form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
