@@ -7,19 +7,22 @@
 {% block content %}
 {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 <div class="container-md">
-    <h3 style="color:white">Upload an image below and the server will run ResNet50 on it to detect any items in the image,
-        and label them in boxes</h3>
-    <br>
+    <h1 style="color:white">Machine Learning Demo</h1>
+    <h4 style="color:white">Upload an image below and the server will run ResNet50 on it to detect any items in the image,
+        and label them in boxes</h4>
     <p style="color:white"> Note that no images are ever stored on the server, and larger images will take some time to run.</p>
     <form role="form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {% bootstrap_form form %}
+        <div class="mb-3">
+            <input type="file" name="image" class="form-control is-valid" required id="id_image">
+            <div class="form-text">Please upload an image in .jpg format and is less than 5 Megabytes</div>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     {% if classification %}
     <img src = {{ image }} width="80%" class="rounded mx-auto d-block">
     <br>
-    ResNet believes that this is a {{ classification }} with {{ score }} certainty
+    <p style="color:white">ResNet believes that this is a {{ classification }} with {{ score }} certainty</p>
     {% endif %}
 
 </div>

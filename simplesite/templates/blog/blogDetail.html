@@ -35,7 +35,9 @@
         {% if user.is_authenticated %}
         <form method="post">
             {% csrf_token %}
-            {% bootstrap_form form %}
+            <div style="color:white">
+                {% bootstrap_form form %}
+            </div>
             <input type="submit" class="btn btn-primary" value="Submit">
         </form>
         {% else %}

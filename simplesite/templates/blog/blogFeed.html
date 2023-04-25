@@ -5,9 +5,9 @@
 
 
 {% block content %}
-{% bootstrap_messages %}
-<div class="container">
-    <h1 class="my-4" style="color:white">Blog Feed</h1>
+{% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+<div class="container" >
+    <h1 style="color:white">Blog Feed</h1>
     {% if user.is_authenticated %}
     <a href="{% url 'blogCreate' %}" class="btn btn-primary" type="button" >New Post</a>
     <br>
