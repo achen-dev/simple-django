@@ -5,10 +5,17 @@
 
 {% block content %}
 {% bootstrap_messages %}
-<div class="container-md" style="text-color: white">
+<div class="container-md" style="color: white">
+    <h1>API Playground</h1>
+    <p>Enter an integer below and the server will post it to a series of public APIs and display their
+    response</p>
     <form role="form" method="post">
         {% csrf_token %}
-        {% bootstrap_form form %}
+        <div class="mb-3">
+          <input type="number" name="number" min="0" max="100"
+                 class="form-control" placeholder="Number" required id="id_number">
+          <div class="form-text">Please enter an integer</div>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
@@ -21,11 +28,10 @@
         <div class="card-body">
           <h5 class="card-title">Numbers API</h5>
           <p class="card-text">
-            This API returns a random fact about a number.
             {% if numbersAPI %}
-            <br>
-            <br>
             {{ numbersAPI }}
+            {% else %}
+            This API returns a random fact about a number.
             {% endif %}
           </p>
         </div>
@@ -36,11 +42,10 @@
           <div class="card-body">
             <h5 class="card-title">Pokemon API</h5>
             <p class="card-text">
-              This API returns the pokemon corresponding to the search number.
               {% if pokemonAPI %}
-              <br>
-              <br>
               {{ pokemonAPI }}
+              {% else %}
+              This API returns the pokemon corresponding to the search number.
               {% endif %}
             </p>
           </div>
@@ -51,11 +56,10 @@
           <div class="card-body">
             <h5 class="card-title">Math API</h5>
             <p class="card-text">
-              This API returns a random math fact.
               {% if mathAPI %}
-              <br>
-              <br>
               {{ mathAPI }}
+              {% else %}
+              This API returns a random math fact.
               {% endif %}
             </p>
           </div>

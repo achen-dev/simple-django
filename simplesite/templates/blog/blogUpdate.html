@@ -6,10 +6,8 @@
 {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
 {% block content %}
-{{ user }}
-{{ post.author }}
 {% if user == post.author %}
-<form method="post">
+<form method="post" style="color:white">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Update">

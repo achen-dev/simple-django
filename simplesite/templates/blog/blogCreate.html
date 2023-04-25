@@ -9,17 +9,20 @@
 {% if user.is_authenticated %}
     <form method="post">
         {% csrf_token %}
-        {{ form.title.errors }}
-        {{ form.title.label_tag }}
-        {{ form.title }}
-        <br>
-        {{ form.content.errors }}
-        {{ form.content.label_tag }}
-        {{ form.content }}
-        <br>
-        {{ form.status.errors }}
-        {{ form.status.label_tag }}
-        {{ form.status }}
+        <div class="form-group" style="color:white">
+            {{ form.title.errors }}
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            <br>
+            {{ form.content.errors }}
+            {{ form.content.label_tag }}
+            {{ form.content }}
+            <br>
+            {{ form.status.errors }}
+            {{ form.status.label_tag }}
+            {{ form.status }}
+        </div>
+
         <input type="submit" value="Create" class="btn btn-primary">
 
     </form>

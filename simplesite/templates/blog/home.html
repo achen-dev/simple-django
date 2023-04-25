@@ -4,17 +4,20 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-    <div class="container">
+    <div class="container" style="color:white">
 <!--        If user is authenticated, show home page and all blog posts, along with a new blog post option-->
-        {% if user.is_authenticated %}
         {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+        <h1>Aussar's Django Demo Portfolio</h1>
+        {% if user.is_authenticated %}
         <h2>Hello {{ request.user.username }}</h2>
-        <a href="{% url 'logout' %}" class="btn btn-primary" type="button" >Logout</a>
-
-        {% else %}
-        <a href="{% url 'login' %}" class="btn btn-primary" type="button" >Login</a>
-        <a href="{% url 'register' %}" class="btn btn-primary" type="button" >Register</a>
         {% endif %}
+        <p>Welcome to my website! Here you can see a list of different functionalities that were built
+        to showcase the capabilities of a pure Django driven website.</p>
+        <p>Feel free to explore the different pages and see what you can do!</p>
+        <p>Some of the functions are only accessible to logged-in users, so make sure to create an account</p>
+        <p>Enjoy!</p>
+            <p>If you want to see the source code, feel free to look here for a fully funcitonal CI/CD pipeline for
+            deployment and an automated testing suite: <a href="https://github.com/achen-dev/simple-django">Github site</a></p>
 
     </div>
 {% endblock %}
