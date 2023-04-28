@@ -4,8 +4,8 @@
 
 
 {% block bootstrap5_content %}
-<div class="container">
-    <h1>{% block title %}Login Form{% endblock %}</h1>
+<div class="container bg-dark text-white">
+    <h1>{% block title %}Login{% endblock %}</h1>
     <form method="post" class = ".form-group">
     {% csrf_token %}
     {% bootstrap_form form %}
