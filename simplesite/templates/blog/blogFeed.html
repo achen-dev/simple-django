@@ -8,11 +8,12 @@
 {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 <div class="container" >
     <h1 style="color:white">Blog Feed</h1>
-    {% if user.is_authenticated %}
-    <a href="{% url 'blogCreate' %}" class="btn btn-primary" type="button" >New Post</a>
-    <br>
-    <br>
-    {% endif %}
+<!--    Commenting this out for now to avoid misuse of the site-->
+<!--    {% if user.is_authenticated %}-->
+<!--    <a href="{% url 'blogCreate' %}" class="btn btn-primary" type="button" >New Post</a>-->
+<!--    <br>-->
+<!--    <br>-->
+<!--    {% endif %}-->
     {% for post in post_list %}
     <div class="card mb-4">
         <div class="card-body">
