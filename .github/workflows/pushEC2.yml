@@ -38,7 +38,7 @@ jobs:
           TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
 
       - name: Install requirements
-        run: ssh staging 'cd ${{env.TARGET_DIR}} && cd .. && source simplesite-venv/bin/activate && cd ${{env.TARGET_DIR}} && pipenv install -r'
+        run: ssh staging 'cd ${{env.TARGET_DIR}} && cd .. && source simplesite-venv/bin/activate && cd ${{env.TARGET_DIR}} && pip install -r requirements.txt'
         env:
           TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
 
