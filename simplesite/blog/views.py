@@ -27,6 +27,7 @@ class HomePageView(TemplateView):
         return render(request, self.template_name)
 
 
+
 class APIPlaygroundView(FormView):
     template_name = "blog/apiPlayground.html"
     form_class = NumberForm
