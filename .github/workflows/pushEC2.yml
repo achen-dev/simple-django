@@ -44,7 +44,7 @@ jobs:
           TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
 
       - name: make migrations
-        run: ssh staging 'cd ${{env.TARGET_DIR}} && cd.. && source simplesite-venv/bin/activate && cd ${{env.TARGET_DIR}} &&
+        run: ssh staging 'cd ${{env.TARGET_DIR}} && cd .. && source simplesite-venv/bin/activate && cd ${{env.TARGET_DIR}} &&
              python manage.py makemigrations'
         env:
           TARGET_DIR: ${{ secrets.EC2_TARGET_DIR }}
