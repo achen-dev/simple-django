@@ -7,7 +7,7 @@ import torch
 from torchvision.io.image import read_image
 from torchvision.models.detection import fasterrcnn_resnet50_fpn_v2, FasterRCNN_ResNet50_FPN_V2_Weights
 from torchvision.utils import draw_bounding_boxes
-from torchvision.transforms.functional import to_pil_image
+from torchvision.transforms.functional import to_pil_image, resize
 
 
 # Base 64 dependencies
@@ -21,7 +21,9 @@ from PIL import ImageFont
 def buffer_to_torch(web_data):
     tensor_data = torch.frombuffer(web_data, dtype=torch.uint8)
     img_data = decode_image(tensor_data)
-    return img_data
+    resized_image = resize(img_data, 1024)
+    print(resized_image.shape)
+    return resized_image
 
 
 def predict_image(img):
@@ -29,13 +31,17 @@ def predict_image(img):
     model = torch.load('static/models/resnet.pth')
     model.eval()
     preprocess = weights.transforms()
-
+    print("preprocess completed")
+    print(img.shape[0])
     # Step 3: Apply inference preprocessing transforms
     batch = preprocess(img).unsqueeze(0)
+    print("batch completed")
     prediction = model(batch).squeeze(0).softmax(0)
+    print("squeeze completed")
     class_id = prediction.argmax().item()
     score = prediction[class_id].item()
     category_name = weights.meta["categories"][class_id]
+    print("reached end of org predict function")
     return (category_name, score)
 
 
@@ -63,5 +69,6 @@ def detect_image(img):
     buffered = BytesIO()
     im.save(buffered, format="JPEG")
     img_str = base64.b64encode(buffered.getvalue())
+    print("reached end of boxing image")
     return img_str
 
