@@ -27,6 +27,7 @@ class HomePageView(TemplateView):
         return render(request, self.template_name)
 
 
+
 class APIPlaygroundView(FormView):
     template_name = "blog/apiPlayground.html"
     form_class = NumberForm
@@ -196,3 +197,4 @@ class GameView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+

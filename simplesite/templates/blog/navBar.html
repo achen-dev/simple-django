@@ -2,6 +2,12 @@
 
 {% load static %}
 {% load django_bootstrap5 %}
+{% load bootstrap_icons %}
+{% block bootstrap5_extra_head %}<link rel="icon" type="image/x-icon" href="{% static '/favicon.ico' %}" sizes="16x16"/>{% endblock %}
+
+{% block title %}Aussar's Django Demo{% endblock %}
+
+
 
 {% block bootstrap5_content %}
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color:Gray">
@@ -43,4 +49,34 @@
             {% block content %}{% endblock %}
         </div>
     </div>
+
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-light text-muted">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+    <!-- Left -->
+    <div class="me-5 d-none d-lg-block">
+      <span>Get connected with me on my other websites:</span>
+    </div>
+    <!-- Left -->
+
+    <!-- Right -->
+    <div>
+      <a href="https://achen-dev.github.io/" class="me-4 text-reset" style="text-decoration:none">
+          {% bs_icon "briefcase-fill" %}
+      </a>
+      <a href="https://github.com/achen-dev/" class="me-4 text-reset" style="text-decoration:none">
+          {% bs_icon "github" %}
+      </a>
+    </div>
+    <!-- Right -->
+  </section>
+  <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+    © 2023 Copyright:
+    <a class="text-reset fw-bold">Aussar Development</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
 {% endblock %}
+
