@@ -8,13 +8,18 @@
 {% bootstrap_messages %}
 <div class="container-md" style="color:white">
     <h1>AI Agent Demo</h1>
-    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked hx-post="/human">
-      <label class="btn btn-outline-primary" for="btnradio1">Play against human locally</label>
+    <form method="post">
+        {% csrf_token %}
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="btnradio1">Play against human locally</label>
 
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" hx-post="/ai">
-      <label class="btn btn-outline-primary" for="btnradio2">Play against AI</label>
-    </div>
+          <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+          <label class="btn btn-outline-primary" for="btnradio2">Play against AI</label>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
 </div>
 {% endblock %}
 
