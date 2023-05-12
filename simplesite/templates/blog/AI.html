@@ -1,0 +1,33 @@
+{% extends 'blog/navBar.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% bootstrap_css %}
+
+{% block content %}
+{% bootstrap_messages %}
+<div class="container-md" style="color:white">
+    <h1>AI Agent Demo</h1>
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked hx-post="/human">
+      <label class="btn btn-outline-primary" for="btnradio1">Play against human locally</label>
+
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" hx-post="/ai">
+      <label class="btn btn-outline-primary" for="btnradio2">Play against AI</label>
+    </div>
+</div>
+{% endblock %}
+
+{% block bootstrap5_extra_script %}
+<script>
+var example = document.getElementById("btnradio2").checked;
+
+if(example) {
+  document.getElementById("speedbtn").style.display = "none";
+  document.getElementById("jmpbtn").style.display = "none";
+} else {
+  document.getElementById("speedbtn").style.display = "";
+  document.getElementById("jmpbtn").style.display = "";
+}</script>
+<script src="{% static 'scripts/htmx.min.js' %}"></script>
+{% endblock %}

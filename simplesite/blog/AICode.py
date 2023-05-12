@@ -4,7 +4,7 @@ This code drives the backend logic and AI agent for the connect 4 game
 
 # imports
 import itertools
-
+import random
 # Helper code for generating board
 # for i in range(7):
 #     str = "["
@@ -92,16 +92,59 @@ def place_piece(game_state, player, column):
     return "Invalid move", None
 
 
+def random_ai_move(game_state, current_player):
+    """
+    Randomly places a piece in a column
+    """
+    column = random.randint(0, 6)
+    return place_piece(game_state, current_player, column)
+
+
+def minmax_ai_move(game_state, current_player):
+    """
+    Uses the minmax algorithm to determine the best move
+    """
+    pass
+
+
+def mcts_ai_move(game_state, current_player):
+    """
+    Uses the Monte Carlo Tree Search algorithm to determine the best move
+    """
+    pass
+
+
 if __name__ == "__main__":
     players = itertools.cycle(["A", "B"])
     game_state = initialise_game()
+    game_mode = input("Enter game mode (1 for 1 player vs AI, 2 for 2 player): ")
+    ai_difficulty = ""
+    if game_mode == "1":
+        ai_difficulty = input("Enter AI difficulty (1 for easy, 2 for medium, 3 for hard): ")
     print_game_state(game_state)
     while True:
         current_player = next(players)
         while True:
-            print("Player " + current_player + "'s turn")
-            column = int(input("Column: "))
-            next_state, last_piece = place_piece(game_state, current_player, column)
+
+            # If it's the AI's turn, make a move accordingly
+            if ai_difficulty != "" and current_player == "B":
+                if ai_difficulty == "1":  # Random AI
+                    next_state, last_piece = random_ai_move(game_state, current_player)
+                elif ai_difficulty == "2":  # Minmax AI
+                    pass
+                elif ai_difficulty == "3":  # MCTS AI
+                    pass
+                else:
+                    print("Invalid AI difficulty")
+                    continue
+                print("AI's turn")
+                print("AI placed at", last_piece)
+
+            # If it's the player's turn, ask for input
+            else:
+                print("Player " + current_player + "'s turn")
+                column = int(input("Column: "))
+                next_state, last_piece = place_piece(game_state, current_player, column)
             if next_state == "Invalid move":
                 print("Invalid move")
                 continue
