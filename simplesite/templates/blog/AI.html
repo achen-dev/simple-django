@@ -8,17 +8,37 @@
 {% bootstrap_messages %}
 <div class="container-md" style="color:white">
     <h1>AI Agent Demo</h1>
+    {% if not gamemode %}
     <form method="post">
         {% csrf_token %}
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-          <label class="btn btn-outline-primary" for="btnradio1">Play against human locally</label>
+          <input type="radio" class="btn-check" name="gamemode" id="gamechoice1" autocomplete="off" value="Human">
+          <label class="btn btn-outline-primary" for="gamechoice1" disabled>Play against human locally</label>
 
-          <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-          <label class="btn btn-outline-primary" for="btnradio2">Play against AI</label>
+          <input type="radio" class="btn-check" name="gamemode" id="gamechoice2" autocomplete="off" value="AI">
+          <label class="btn btn-outline-primary" for="gamechoice2" disabled>Play against AI</label>
         </div>
-        <button type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
+    {% endif %}
+    {% if gamemode == "AI" %}
+    <h2>AI Difficulty Choice</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="difficulty" id="diff1" autocomplete="off" value="Random">
+            <label class="btn btn-outline-primary" for="diff1">Easy AI (Random)</label>
+
+            <input type="radio" class="btn-check" name="difficulty" id="diff2" autocomplete="off" value="MinMax">
+            <label class="btn btn-outline-primary" for="diff2">Medium AI (MinMax)</label>
+
+            <input type="radio" class="btn-check" name="difficulty" id="diff3" autocomplete="off" value="MCTS">
+            <label class="btn btn-outline-primary" for="diff3">Hard AI (Monte Carlo)</label>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+    {% endif %}
+
 
 </div>
 {% endblock %}
@@ -34,5 +54,4 @@ if(example) {
   document.getElementById("speedbtn").style.display = "";
   document.getElementById("jmpbtn").style.display = "";
 }</script>
-<script src="{% static 'scripts/htmx.min.js' %}"></script>
 {% endblock %}

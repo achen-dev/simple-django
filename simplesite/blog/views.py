@@ -9,6 +9,7 @@ from base64 import b64encode
 from django.contrib.auth import login
 from .models import *
 from .utils import slugify
+from .AICode import *
 
 # API LINKS
 NUMBERS_API_LINK = "http://numbersapi.com/"
@@ -25,7 +26,6 @@ class HomePageView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
-
 
 
 class APIPlaygroundView(FormView):
@@ -211,6 +211,7 @@ class AIView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = request.POST()
+        context['gamemode'] = request.POST.get('gamemode')
+        context['difficulty'] = request.POST.get('difficulty')
         print(request, *args, **kwargs)
         return super(TemplateView, self).render_to_response(context)
