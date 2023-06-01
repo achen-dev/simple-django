@@ -33,13 +33,36 @@ def print_game_state(gamestate):
     """
     Prints the current game state
     """
+    state_string = ""
     for i in range(5, -1, -1):
-        str = ""
+        line = ""
         for j in range(7):
-            str += gamestate[j][i] + " "
-        print(str)
+            if gamestate[j][i] == "B":
+                line += '\033[93m' + "B" + '\033[0m' + " "
+
+            elif gamestate[j][i] == "A":
+                line += '\033[94m' + "A" + '\033[0m' + " "
+            else:
+                line += gamestate[j][i] + " "
+        state_string += line + "\n"
+    print(state_string)
     print("_____________")
     print("0 1 2 3 4 5 6")
+
+
+def transpose_game_state(gamestate):
+    output_list = []
+    for i in range(5, -1, -1):
+        line_list = []
+        for j in range(7):
+            if gamestate[j][i] == "B":
+                line_list.append("B")
+            elif gamestate[j][i] == "A":
+                line_list.append("A")
+            else:
+                line_list.append("X")
+        output_list.append(line_list)
+    return output_list
 
 
 def game_end(game_state, last_piece):

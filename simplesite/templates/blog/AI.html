@@ -8,7 +8,25 @@
 {% bootstrap_messages %}
 <div class="container-md" style="color:white">
     <h1>AI Agent Demo</h1>
-    {% if not gamemode %}
+    gamemode
+    {{ gamemode }}
+    <br>
+    diff
+    {{ difficulty }}
+    <br>
+    gamestate
+    {{ gamestate }}
+    <br>
+    currentplayer
+    {{ current_player }}
+    <br>
+    move
+    {{ move }}
+    <br>
+    Cookie data
+    {{ cookie_data }}
+    <br>
+    {% if not gamemode and not difficulty %}
     <form method="post">
         {% csrf_token %}
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -21,7 +39,7 @@
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
     {% endif %}
-    {% if gamemode == "AI" %}
+    {% if gamemode == "AI" and not difficulty%}
     <h2>AI Difficulty Choice</h2>
     <form method="post">
         {% csrf_token %}
@@ -38,20 +56,56 @@
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
     {% endif %}
+    {% if gamewin %}
+    <h1>{{ winner }} WINS!</h1>
+    {% endif %}
+    {% if difficulty or gamemode == "Human" %}
+    {% if not gamewin %}
+    <h2>Game Started! Currently, it is {{ current_player }}'s Turn</h2>
+    {% endif %}
+        <div class="container-md" align="center">
+            {% for line in displaystate %}
+                <div class="row" style="height: 100px">
+                {% for item in line %}
+                    {% if item == "X" %}
+                        <div class="h-100 col bg-secondary">
+                            X
+                        </div>
+                    {% elif item == "A" %}
+                        <div class="h-100 col bg-primary">
+                            A
+                        </div>
+                    {% elif item == "B" %}
+                        <div class="h-100 col bg-danger">
+                            B
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+            {% endfor %}
+        {% if not gamewin %}
+        <form method="post">
+            <div class="row">
 
+            {% csrf_token %}
+            {% for num in "1234567" %}
+                <div class="col">
+                    <input type="submit" id="move" name="move" class="btn btn-primary" value="{{ num }}">
+                </div>
+            {% endfor %}
 
+            </div>
+        </form>
+        {% endif %}
+        </div>
+    {% endif %}
+    {% if gamewin %}
+    <br>
+    <a class="btn btn-primary" href="{% url 'AIDemo' %}">Play Again</a>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block bootstrap5_extra_script %}
-<script>
-var example = document.getElementById("btnradio2").checked;
 
-if(example) {
-  document.getElementById("speedbtn").style.display = "none";
-  document.getElementById("jmpbtn").style.display = "none";
-} else {
-  document.getElementById("speedbtn").style.display = "";
-  document.getElementById("jmpbtn").style.display = "";
-}</script>
 {% endblock %}

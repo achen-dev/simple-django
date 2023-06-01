@@ -10,6 +10,7 @@ from django.contrib.auth import login
 from .models import *
 from .utils import slugify
 from .AICode import *
+import json
 
 # API LINKS
 NUMBERS_API_LINK = "http://numbersapi.com/"
@@ -207,11 +208,90 @@ class AIView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['gamemode'] = None
+        context['state'] = None
+        context['difficulty'] = None
+        context['displaystate'] = None
+        context['current_player'] = None
         return context
 
+    def get(self, request, **kwargs):
+        context = dict()
+        context['gamemode'] = None
+        context['state'] = None
+        context['difficulty'] = None
+        context['displaystate'] = None
+        context['current_player'] = "A"
+        request.session['cur_context'] = context
+        return render(request, self.template_name)
+
     def post(self, request, *args, **kwargs):
+        print("Post responses")
         context = super().get_context_data(**kwargs)
-        context['gamemode'] = request.POST.get('gamemode')
-        context['difficulty'] = request.POST.get('difficulty')
-        print(request, *args, **kwargs)
-        return super(TemplateView, self).render_to_response(context)
+        if request.session.get('cur_context'):
+            prev_context = request.session.get('cur_context')
+        else:
+            prev_context = dict()
+        print(prev_context)
+        print(context)
+        print(context.keys())
+
+        if request.POST.get('gamemode'):
+            context['gamemode'] = request.POST.get('gamemode')
+        else:
+            context['gamemode'] = prev_context['gamemode']
+
+        if request.POST.get('difficulty'):
+            context['difficulty'] = request.POST.get('difficulty')
+            context['current_player'] = "A"
+        else:
+            context['difficulty'] = prev_context['difficulty']
+
+        if 'gamestate' not in prev_context.keys():
+            game_state = initialise_game()
+            context['current_player'] = "A"
+        else:
+            game_state = prev_context["gamestate"]
+
+        context['gamestate'] = game_state
+
+        if request.POST.get("move"):
+            move_col = int(request.POST.get('move'))-1
+            if prev_context['current_player'] == "A":
+                next_state, last_piece = place_piece(game_state,"A",move_col)
+            else:
+                next_state, last_piece = place_piece(game_state, "B", move_col)
+            context['gamestate'] = next_state
+
+            if game_end(game_state, last_piece):
+                context['gamewin'] = True
+                context['winner'] = prev_context['current_player']
+
+            # AI section
+            if context['difficulty'] == "Random":
+                if prev_context['current_player'] == "A":
+                    prev_context['current_player'] = "B"
+                else:
+                    prev_context['current_player'] = "A"
+                next_state, last_piece = random_ai_move(next_state, prev_context['current_player'])
+                context['gamestate'] = next_state
+                game_state = next_state
+
+            if game_end(game_state, last_piece):
+                context['gamewin'] = True
+                context['winner'] = prev_context['current_player']
+
+            if prev_context['current_player'] == "A":
+                context['current_player'] = "B"
+            else:
+                context['current_player'] = "A"
+
+
+
+        context.pop("view") # Remove unserialisable content
+        cur_context_json = json.dumps(context, indent=4)
+        request.session['cur_context'] = context
+        request.session.modified = True
+        context['displaystate'] = transpose_game_state(game_state)
+        print(context)
+        return render(request, self.template_name, context)
