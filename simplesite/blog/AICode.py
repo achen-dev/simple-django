@@ -119,16 +119,60 @@ def random_ai_move(game_state, current_player):
     """
     Randomly places a piece in a column
     """
-    column = random.randint(0, 6)
-    return place_piece(game_state, current_player, column)
+    valid_columns = []
+    for column in range(len(game_state)):
+        if game_state[column][5] == "X":
+            valid_columns.append(column)
+    play_column = random.choice(valid_columns)
+    return place_piece(game_state, current_player, play_column)
 
 
 def minmax_ai_move(game_state, current_player):
     """
     Uses the minmax algorithm to determine the best move
+    Each max is scored by the longest chain of own pieces on that move
+    Each min is scored by the longest chain of enemy pieces on that move
     """
-    pass
+    valid_columns = []
+    for column in range(len(game_state)):
+        if game_state[column][5] == "X":
+            valid_columns.append(column)
 
+    minmax_dict = {}
+    for column in valid_columns:
+        for row in range(len(game_state[column])):
+            if game_state[column][row] == "X":
+                row_location = row
+                break
+        piece_location = (column, row_location)
+        print(piece_location)
+    return random_ai_move(game_state, current_player)
+
+
+def score_state(game_state, current_player):
+    """
+    Score the state for a given player by using the longest chain that exists in that game state
+    """
+    score = 0
+    for column in range(len(game_state)):
+        for row in range(len(game_state[column])):
+            if game_state[column][row] == current_player:
+                pass
+                # Explore up
+                # Explore top right
+                # Explore right
+                # Explore bottom right
+                # Explore down
+                # Explore bottom left
+                # Explore left
+                # Explore top left
+            else:
+                pass
+    return score
+
+def explore_chain(game_state, current_player, start_point, vertical, horizontal):
+    start_x, start_y = start_point
+    if game_state[start_x + vertical][start_y + vertical]
 
 def mcts_ai_move(game_state, current_player):
     """
@@ -154,7 +198,7 @@ if __name__ == "__main__":
                 if ai_difficulty == "1":  # Random AI
                     next_state, last_piece = random_ai_move(game_state, current_player)
                 elif ai_difficulty == "2":  # Minmax AI
-                    pass
+                    next_state, last_piece = minmax_ai_move(game_state, current_player)
                 elif ai_difficulty == "3":  # MCTS AI
                     pass
                 else:
