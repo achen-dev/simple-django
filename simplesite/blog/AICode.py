@@ -130,22 +130,13 @@ def random_ai_move(game_state, current_player):
 def minmax_ai_move(game_state, current_player):
     """
     Uses the minmax algorithm to determine the best move
-    Each max is scored by the longest chain of own pieces on that move
-    Each min is scored by the longest chain of enemy pieces on that move
     """
     valid_columns = []
     for column in range(len(game_state)):
         if game_state[column][5] == "X":
             valid_columns.append(column)
 
-    minmax_dict = {}
-    for column in valid_columns:
-        for row in range(len(game_state[column])):
-            if game_state[column][row] == "X":
-                row_location = row
-                break
-        piece_location = (column, row_location)
-        print(piece_location)
+
     return random_ai_move(game_state, current_player)
 
 
@@ -157,22 +148,44 @@ def score_state(game_state, current_player):
     for column in range(len(game_state)):
         for row in range(len(game_state[column])):
             if game_state[column][row] == current_player:
-                pass
                 # Explore up
+                up_chain = explore_chain(game_state, current_player, (column, row), 1, 0)
                 # Explore top right
+                top_right_chain = explore_chain(game_state, current_player, (column,row), 1, 1)
                 # Explore right
+                right_chain = explore_chain(game_state, current_player, (column,row), 0, 1)
                 # Explore bottom right
+                bottom_right_chain = explore_chain(game_state, current_player, (column,row), -1, 1)
                 # Explore down
+                down_chain = explore_chain(game_state, current_player, (column,row), -1, 0)
                 # Explore bottom left
+                bottom_left_chain = explore_chain(game_state, current_player, (column,row), -1, -1)
                 # Explore left
+                left_chain = explore_chain(game_state, current_player, (column,row), 0, -1)
                 # Explore top left
+                top_left_chain = explore_chain(game_state, current_player, (column,row), 1, -1)
+                max_score = max(up_chain,top_right_chain, right_chain, bottom_right_chain, down_chain,
+                                bottom_left_chain, left_chain, top_left_chain)
+                if max_score > score:
+                    score = max_score
             else:
                 pass
+
     return score
+
 
 def explore_chain(game_state, current_player, start_point, vertical, horizontal):
     start_x, start_y = start_point
-    if game_state[start_x + vertical][start_y + vertical]
+    chain_length = 1
+    while True:
+        start_x += horizontal
+        start_y += vertical
+        if game_state[start_x][start_y] == current_player:
+            chain_length += 1
+        else:
+            break
+    return chain_length
+
 
 def mcts_ai_move(game_state, current_player):
     """
@@ -220,6 +233,7 @@ if __name__ == "__main__":
                 break
         print("_____________")
         print_game_state(game_state)
+        print(score_state(game_state, current_player))
         if game_end(game_state, last_piece):
             print(current_player + " wins!")
             break
