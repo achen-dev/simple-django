@@ -5,6 +5,8 @@ This code drives the backend logic and AI agent for the connect 4 game
 # imports
 import itertools
 import random
+from copy import copy
+
 # Helper code for generating board
 # for i in range(7):
 #     str = "["
@@ -26,7 +28,7 @@ def initialise_game():
         ["X", "X", "X", "X", "X", "X"],
         ["X", "X", "X", "X", "X", "X"],
         ["X", "X", "X", "X", "X", "X"],
-        ]
+    ]
 
 
 def print_game_state(gamestate):
@@ -82,19 +84,19 @@ def game_end(game_state, last_piece):
     # Check diagonals
     diagonal_desc_list = []
     diagonal_asc_list = []
-    for diag_column in range(max(0, last_piece[0]-3), min(len(game_state), last_piece[0]+4)):
+    for diag_column in range(max(0, last_piece[0] - 3), min(len(game_state), last_piece[0] + 4)):
         column_slots = game_state[diag_column]
         col_dist_from_last_piece = last_piece[0] - diag_column
 
         # Check diagonal descending (top left to bottom right)
-        relevant_slot_desc = last_piece[1]+(col_dist_from_last_piece)
+        relevant_slot_desc = last_piece[1] + (col_dist_from_last_piece)
         if 6 > relevant_slot_desc >= 0:
             rel_slot_status = column_slots[relevant_slot_desc]
             diagonal_desc_list.append(rel_slot_status)
             # print(diag_column,col_dist_from_last_piece, rel_slot_status) # Debug
 
         # Check diagonal ascending (bottom left to top right)
-        relevant_slot_asc = last_piece[1]-(col_dist_from_last_piece)
+        relevant_slot_asc = last_piece[1] - (col_dist_from_last_piece)
         if 6 > relevant_slot_asc >= 0:
             rel_slot_status_asc = column_slots[relevant_slot_asc]
             diagonal_asc_list.append(rel_slot_status_asc)
@@ -107,11 +109,11 @@ def game_end(game_state, last_piece):
     return False
 
 
-def place_piece(game_state, player, column):
-    for slot in range(len(game_state[column])):
-        if game_state[column][slot] == "X":
-            game_state[column][slot] = player
-            return game_state, (column, slot)
+def place_piece(place_game_state, player, place_column):
+    for slot in range(len(place_game_state[place_column])):
+        if place_game_state[place_column][slot] == "X":
+            place_game_state[place_column][slot] = player
+            return place_game_state, (place_column, slot)
     return "Invalid move", None
 
 
@@ -127,17 +129,41 @@ def random_ai_move(game_state, current_player):
     return place_piece(game_state, current_player, play_column)
 
 
-def minmax_ai_move(game_state, current_player):
+def minmax_ai_move(ai_state, current_player, alpha, beta, isMax, depth):
     """
     Uses the minmax algorithm to determine the best move
     """
+    print(depth, alpha, beta, isMax)
     valid_columns = []
-    for column in range(len(game_state)):
-        if game_state[column][5] == "X":
-            valid_columns.append(column)
+    for ai_column in range(len(ai_state)):
+        if ai_state[ai_column][5] == "X":
+            valid_columns.append(ai_column)
 
+    if score_state(ai_state, current_player) == 4:
+        return score_state(ai_state, current_player), column
 
-    return random_ai_move(game_state, current_player)
+    if isMax:
+        best_value = -float('inf')
+        for ai_column in valid_columns:
+            next_ai_state, holder_piece = place_piece(ai_state, current_player, ai_column)
+            value, sel_column = minmax_ai_move(next_ai_state, current_player, alpha, beta, False, depth + 1)
+            best_value = max(best_value, value)
+            alpha = max(best_value, alpha)
+            if beta <= alpha:
+                break
+            return best_value, sel_column
+    else:
+        best_value = float('inf')
+        for ai_column in valid_columns:
+            next_ai_state, holder_piece = place_piece(ai_state, current_player, ai_column)
+            value, sel_column = minmax_ai_move(next_ai_state, current_player, alpha, beta, True, depth + 1)
+            best_value = min(best_value, value)
+            beta = min(beta, best_value)
+            if beta <= alpha:
+                break
+            return best_value, sel_column
+
+    print(best_value)
 
 
 def score_state(game_state, current_player):
@@ -151,20 +177,20 @@ def score_state(game_state, current_player):
                 # Explore up
                 up_chain = explore_chain(game_state, current_player, (column, row), 1, 0)
                 # Explore top right
-                top_right_chain = explore_chain(game_state, current_player, (column,row), 1, 1)
+                top_right_chain = explore_chain(game_state, current_player, (column, row), 1, 1)
                 # Explore right
-                right_chain = explore_chain(game_state, current_player, (column,row), 0, 1)
+                right_chain = explore_chain(game_state, current_player, (column, row), 0, 1)
                 # Explore bottom right
-                bottom_right_chain = explore_chain(game_state, current_player, (column,row), -1, 1)
+                bottom_right_chain = explore_chain(game_state, current_player, (column, row), -1, 1)
                 # Explore down
-                down_chain = explore_chain(game_state, current_player, (column,row), -1, 0)
+                down_chain = explore_chain(game_state, current_player, (column, row), -1, 0)
                 # Explore bottom left
-                bottom_left_chain = explore_chain(game_state, current_player, (column,row), -1, -1)
+                bottom_left_chain = explore_chain(game_state, current_player, (column, row), -1, -1)
                 # Explore left
-                left_chain = explore_chain(game_state, current_player, (column,row), 0, -1)
+                left_chain = explore_chain(game_state, current_player, (column, row), 0, -1)
                 # Explore top left
-                top_left_chain = explore_chain(game_state, current_player, (column,row), 1, -1)
-                max_score = max(up_chain,top_right_chain, right_chain, bottom_right_chain, down_chain,
+                top_left_chain = explore_chain(game_state, current_player, (column, row), 1, -1)
+                max_score = max(up_chain, top_right_chain, right_chain, bottom_right_chain, down_chain,
                                 bottom_left_chain, left_chain, top_left_chain)
                 if max_score > score:
                     score = max_score
@@ -211,7 +237,11 @@ if __name__ == "__main__":
                 if ai_difficulty == "1":  # Random AI
                     next_state, last_piece = random_ai_move(game_state, current_player)
                 elif ai_difficulty == "2":  # Minmax AI
-                    next_state, last_piece = minmax_ai_move(game_state, current_player)
+                    minmax_state = copy(game_state)
+                    ai_score, ai_column = minmax_ai_move(minmax_state, current_player, -float('inf'), float('inf'),
+                                                         True, 0)
+                    print("AI score:", ai_score)
+                    next_state, last_piece = place_piece(game_state, current_player, ai_column)
                 elif ai_difficulty == "3":  # MCTS AI
                     pass
                 else:
@@ -237,6 +267,3 @@ if __name__ == "__main__":
         if game_end(game_state, last_piece):
             print(current_player + " wins!")
             break
-
-
-
