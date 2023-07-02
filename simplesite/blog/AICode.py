@@ -135,12 +135,14 @@ def minmax_ai_move(ai_state, current_player, alpha, beta, isMax, depth, chosen_c
     """
     print(depth, alpha, beta, isMax)
     valid_columns = []
-    for ai_column in range(len(ai_state)):
+    for potential_column in range(len(ai_state)):
         if ai_state[ai_column][5] == "X":
             valid_columns.append(ai_column)
 
     if score_state(ai_state, "A") == 4 or score_state(ai_state, "B") == 4 or depth == 1000 or len(valid_columns) == 0:
         terminal_score = score_state(ai_state, "B") - score_state(ai_state, "A")
+        if score_state(ai_state, "A") == 4:
+            terminal_score = -9999
         print("Reached terminal node, score is: ", terminal_score)
         return terminal_score, chosen_column
 
