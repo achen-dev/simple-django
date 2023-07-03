@@ -5,7 +5,7 @@ This code drives the backend logic and AI agent for the connect 4 game
 # imports
 import itertools
 import random
-from copy import copy, deepcopy
+from copy import copy
 
 # Helper code for generating board
 # for i in range(7):
@@ -129,58 +129,39 @@ def random_ai_move(game_state, current_player):
     return place_piece(game_state, current_player, play_column)
 
 
-def minmax_ai_move(ai_state, current_player, alpha, beta, isMax, depth, chosen_column=None):
+def minmax_ai_move(ai_state, current_player, alpha, beta, isMax, depth):
     """
     Uses the minmax algorithm to determine the best move
     """
     print(depth, alpha, beta, isMax)
     valid_columns = []
-    for potential_column in range(len(ai_state)):
+    for ai_column in range(len(ai_state)):
         if ai_state[ai_column][5] == "X":
             valid_columns.append(ai_column)
 
-    if score_state(ai_state, "A") == 4 or score_state(ai_state, "B") == 4 or depth == 1000 or len(valid_columns) == 0:
-        terminal_score = score_state(ai_state, "B") - score_state(ai_state, "A")
-        if score_state(ai_state, "A") == 4:
-            terminal_score = -9999
-        print("Reached terminal node, score is: ", terminal_score)
-        return terminal_score, chosen_column
+    if score_state(ai_state, current_player) == 4:
+        return score_state(ai_state, current_player), column
 
     if isMax:
-        best_column = None
         best_value = -float('inf')
-        for ai_sim_column in valid_columns:
-            next_ai_state, holder_piece = place_piece(ai_state, "B", ai_sim_column)
-            if next_ai_state == "Invalid move":
-                sel_column = random.choice(valid_columns)
-                break
-            print("Simulated State:")
-            print_game_state(next_ai_state)
-            value, sel_column = minmax_ai_move(next_ai_state, "B", alpha, beta, False, depth + 1, ai_sim_column)
-            if value > best_value:
-                best_value = value
-                best_column = sel_column
+        for ai_column in valid_columns:
+            next_ai_state, holder_piece = place_piece(ai_state, current_player, ai_column)
+            value, sel_column = minmax_ai_move(next_ai_state, current_player, alpha, beta, False, depth + 1)
+            best_value = max(best_value, value)
             alpha = max(best_value, alpha)
             if beta <= alpha:
                 break
-        return best_value, best_column
+            return best_value, sel_column
     else:
         best_value = float('inf')
-        best_column = None
-        for ai_sim_column in valid_columns:
-            next_ai_state, holder_piece = place_piece(ai_state, "A", ai_sim_column)
-            if next_ai_state == "Invalid move":
-                break
-            print("Simulated State:")
-            print_game_state(next_ai_state)
-            value, sel_column = minmax_ai_move(next_ai_state, "A", alpha, beta, True, depth + 1, ai_sim_column)
-            if value < best_value:
-                best_value = value
-                best_column = sel_column
+        for ai_column in valid_columns:
+            next_ai_state, holder_piece = place_piece(ai_state, current_player, ai_column)
+            value, sel_column = minmax_ai_move(next_ai_state, current_player, alpha, beta, True, depth + 1)
+            best_value = min(best_value, value)
             beta = min(beta, best_value)
             if beta <= alpha:
                 break
-        return best_value, sel_column
+            return best_value, sel_column
 
     print(best_value)
 
@@ -225,10 +206,7 @@ def explore_chain(game_state, current_player, start_point, vertical, horizontal)
     while True:
         start_x += horizontal
         start_y += vertical
-
-        if start_x >= len(game_state) or start_y >= len(game_state[0]) or start_x < 0 or start_y < 0:
-            break
-        elif game_state[start_x][start_y] == current_player:
+        if game_state[start_x][start_y] == current_player:
             chain_length += 1
         else:
             break
@@ -259,8 +237,7 @@ if __name__ == "__main__":
                 if ai_difficulty == "1":  # Random AI
                     next_state, last_piece = random_ai_move(game_state, current_player)
                 elif ai_difficulty == "2":  # Minmax AI
-                    imaginary_players = deepcopy(players)
-                    minmax_state = deepcopy(game_state)
+                    minmax_state = copy(game_state)
                     ai_score, ai_column = minmax_ai_move(minmax_state, current_player, -float('inf'), float('inf'),
                                                          True, 0)
                     print("AI score:", ai_score)
