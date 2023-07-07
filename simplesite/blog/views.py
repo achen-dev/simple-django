@@ -11,6 +11,8 @@ from .models import *
 from .utils import slugify
 from .AICode import *
 import json
+from copy import copy, deepcopy
+
 
 # API LINKS
 NUMBERS_API_LINK = "http://numbersapi.com/"
@@ -274,6 +276,21 @@ class AIView(TemplateView):
                 else:
                     prev_context['current_player'] = "A"
                 next_state, last_piece = random_ai_move(next_state, prev_context['current_player'])
+                context['gamestate'] = next_state
+                game_state = next_state
+
+            elif context['difficulty'] == "MinMax":
+                if prev_context['current_player'] == "A":
+                    prev_context['current_player'] = "B"
+                else:
+                    prev_context['current_player'] = "A"
+                minmax_state=deepcopy(next_state)
+                opponent = "A"
+                current_player = "B"
+                ai_column, ai_score = minimax_ai_move(minmax_state, current_player, opponent, 6, -float('inf'),
+                                                      float('inf'), None, True)
+                print("AI score:", ai_score)
+                next_state, last_piece = place_piece(next_state, current_player, ai_column)
                 context['gamestate'] = next_state
                 game_state = next_state
 
