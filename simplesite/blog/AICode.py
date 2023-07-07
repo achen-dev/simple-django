@@ -184,7 +184,7 @@ def legacy_minmax_ai_move(ai_state, current_player, alpha, beta, isMax, depth, c
     print(best_value)
 
 
-def minimax_ai_move(minimax_game_state, current_player, opponent_player, depth, column=None, is_max=None):
+def minimax_ai_move(minimax_game_state, current_player, opponent_player, depth, alpha, beta, column=None, is_max=None):
 
     # print("Is Max?", is_max)
     # print("Raw State:")
@@ -209,9 +209,12 @@ def minimax_ai_move(minimax_game_state, current_player, opponent_player, depth, 
             next_ai_state, last_ai_piece = place_piece(fake_state, current_player, choice[0])
             if next_ai_state == "Invalid move":
                 break
-            evaluation = minimax_ai_move(next_ai_state, current_player, opponent_player, depth-1, choice[0], False)
+            evaluation = minimax_ai_move(next_ai_state, current_player, opponent_player, depth-1, alpha, beta, choice[0], False)
             if evaluation[1] > max_evaluation[1]:
                 max_evaluation = evaluation
+            alpha = max(alpha, max_evaluation[1])
+            if beta <= alpha:
+                break
         return max_evaluation
 
     else:
@@ -221,9 +224,12 @@ def minimax_ai_move(minimax_game_state, current_player, opponent_player, depth, 
             next_ai_state, last_ai_piece = place_piece(fake_state, opponent_player, choice[0])
             if next_ai_state == "Invalid move":
                 break
-            evaluation = minimax_ai_move(next_ai_state, current_player, opponent_player, depth-1, choice[0], True)
+            evaluation = minimax_ai_move(next_ai_state, current_player, opponent_player, depth-1, alpha, beta, choice[0], True)
             if evaluation[1] < min_evaluation[1]:
                 min_evaluation = evaluation
+            beta = min(beta, min_evaluation[1])
+            if beta <= alpha:
+                break
         return min_evaluation
 
 
@@ -316,7 +322,7 @@ if __name__ == "__main__":
                 elif ai_difficulty == "2":  # Minmax AI
                     minmax_state = deepcopy(game_state)
                     opponent = next(deepcopy(players))
-                    ai_column, ai_score = minimax_ai_move(minmax_state, current_player, opponent, 6, None,True)
+                    ai_column, ai_score = minimax_ai_move(minmax_state, current_player, opponent, 6, -float('inf'), float('inf'), None,True)
                     print("AI score:", ai_score)
                     next_state, last_piece = place_piece(game_state, current_player, ai_column)
                 elif ai_difficulty == "3":  # MCTS AI
