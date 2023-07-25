@@ -119,7 +119,7 @@ def place_piece(place_game_state, player, place_column):
 
 def random_ai_move(game_state, current_player):
     """
-    Randomly places a piece in a column
+    Randomly places a piece in a chosen_col
     """
     valid_columns = []
     for column in range(len(game_state)):
@@ -184,11 +184,9 @@ def legacy_minmax_ai_move(ai_state, current_player, alpha, beta, isMax, depth, c
     print(best_value)
 
 
-def minimax_ai_move(minimax_game_state, current_player, opponent_player, depth, alpha, beta, column=None, is_max=None):
-
+def minimax_ai_move(minimax_game_state, ai_player, opponent_player, depth, alpha, beta, chosen_col=None, is_max=None):
+    # print("Column:", chosen_col)
     # print("Is Max?", is_max)
-    # print("Raw State:")
-    # print(minimax_game_state)
     # print("Simulated State:")
     # print_game_state(minimax_game_state)
 
@@ -197,24 +195,25 @@ def minimax_ai_move(minimax_game_state, current_player, opponent_player, depth, 
         if minimax_game_state[choice_column][5] == "X":
             valid_columns.append([choice_column, None])
 
-    if depth == 0 or not valid_columns or score_state(minimax_game_state, current_player) >= 4 or score_state(minimax_game_state, opponent_player) >= 4:
-        state_score = score_heuristic(minimax_game_state, current_player, opponent_player)
+    if depth == 0 or not valid_columns or score_state(minimax_game_state, ai_player) >= 4 or score_state(minimax_game_state, opponent_player) >= 4:
+        state_score = score_heuristic(minimax_game_state, ai_player, opponent_player)
         # print("Terminal state reached with score of", state_score)
-        return [column, state_score]
+        return [chosen_col, state_score]
 
     if is_max:
         max_evaluation = [None, -float('inf')]
         for choice in valid_columns:
             fake_state = deepcopy(minimax_game_state)
-            next_ai_state, last_ai_piece = place_piece(fake_state, current_player, choice[0])
+            next_ai_state, last_ai_piece = place_piece(fake_state, ai_player, choice[0])
             if next_ai_state == "Invalid move":
                 break
-            evaluation = minimax_ai_move(next_ai_state, current_player, opponent_player, depth-1, alpha, beta, choice[0], False)
+            evaluation = minimax_ai_move(next_ai_state, ai_player, opponent_player, depth-1, alpha, beta, choice[0], False)
             if evaluation[1] > max_evaluation[1]:
-                max_evaluation = evaluation
+                max_evaluation = [choice[0],evaluation[1]]
             alpha = max(alpha, max_evaluation[1])
             if beta <= alpha:
-                break
+                pass
+        # print("Propagated chosen max option:", max_evaluation)
         return max_evaluation
 
     else:
@@ -224,52 +223,52 @@ def minimax_ai_move(minimax_game_state, current_player, opponent_player, depth, 
             next_ai_state, last_ai_piece = place_piece(fake_state, opponent_player, choice[0])
             if next_ai_state == "Invalid move":
                 break
-            evaluation = minimax_ai_move(next_ai_state, current_player, opponent_player, depth-1, alpha, beta, choice[0], True)
+            evaluation = minimax_ai_move(next_ai_state, ai_player, opponent_player, depth-1, alpha, beta, choice[0], True)
             if evaluation[1] < min_evaluation[1]:
-                min_evaluation = evaluation
+                min_evaluation = [choice[0],evaluation[1]]
             beta = min(beta, min_evaluation[1])
             if beta <= alpha:
-                break
+                pass
+        # print("Propagated chosen min option:", min_evaluation)
         return min_evaluation
 
 
+def score_heuristic(heuristic_state, cur_player, opp_player):
+    cur_player_score = score_state(heuristic_state, cur_player)
+    opp_player_score = score_state(heuristic_state, opp_player)
+    heuristic_score = cur_player_score-opp_player_score
+    # print("cur_player_score", cur_player_score)
+    # print("opp_player_score", opp_player_score)
+    # print("heuristic_score", heuristic_score)
+    if opp_player_score >= 4:
+        heuristic_score = -999999
+    return heuristic_score
 
 
-
-
-
-
-
-
-
-def score_heuristic(game_state, current_player, opponent_player):
-    return score_state(game_state, current_player) - score_state(game_state, opponent_player)
-
-
-def score_state(game_state, current_player):
+def score_state(scored_state, scored_player):
     """
     Score the state for a given player by using the longest chain that exists in that game state
     """
     score = 0
-    for column in range(len(game_state)):
-        for row in range(len(game_state[column])):
-            if game_state[column][row] == current_player:
+    for col in range(len(scored_state)):
+        for row in range(len(scored_state[col])):
+            if scored_state[col][row] == scored_player:
                 # Explore up
-                up_chain = explore_chain(game_state, current_player, (column, row), 1, 0)
+                up_chain = explore_chain(scored_state, scored_player, (col, row), 1, 0)
                 # Explore top right
-                top_right_chain = explore_chain(game_state, current_player, (column, row), 1, 1)
+                top_right_chain = explore_chain(scored_state, scored_player, (col, row), 1, 1)
                 # Explore right
-                right_chain = explore_chain(game_state, current_player, (column, row), 0, 1)
+                right_chain = explore_chain(scored_state, scored_player, (col, row), 0, 1)
                 # Explore bottom right
-                bottom_right_chain = explore_chain(game_state, current_player, (column, row), -1, 1)
+                bottom_right_chain = explore_chain(scored_state, scored_player, (col, row), -1, 1)
                 # Explore down
-                down_chain = explore_chain(game_state, current_player, (column, row), -1, 0)
+                down_chain = explore_chain(scored_state, scored_player, (col, row), -1, 0)
                 # Explore bottom left
-                bottom_left_chain = explore_chain(game_state, current_player, (column, row), -1, -1)
+                bottom_left_chain = explore_chain(scored_state, scored_player, (col, row), -1, -1)
                 # Explore left
-                left_chain = explore_chain(game_state, current_player, (column, row), 0, -1)
+                left_chain = explore_chain(scored_state, scored_player, (col, row), 0, -1)
                 # Explore top left
-                top_left_chain = explore_chain(game_state, current_player, (column, row), 1, -1)
+                top_left_chain = explore_chain(scored_state, scored_player, (col, row), 1, -1)
                 max_score = max(up_chain, top_right_chain, right_chain, bottom_right_chain, down_chain,
                                 bottom_left_chain, left_chain, top_left_chain)
                 if max_score > score:
@@ -280,16 +279,16 @@ def score_state(game_state, current_player):
     return score
 
 
-def explore_chain(game_state, current_player, start_point, vertical, horizontal):
+def explore_chain(explore_state, explore_player, start_point, vertical, horizontal):
     start_x, start_y = start_point
     chain_length = 1
     while True:
         start_x += horizontal
         start_y += vertical
 
-        if start_x >= len(game_state) or start_y >= len(game_state[0]) or start_x < 0 or start_y < 0:
+        if start_x >= len(explore_state) or start_y >= len(explore_state[0]) or start_x < 0 or start_y < 0:
             break
-        elif game_state[start_x][start_y] == current_player:
+        elif explore_state[start_x][start_y] == explore_player:
             chain_length += 1
         else:
             break
@@ -321,8 +320,8 @@ if __name__ == "__main__":
                     next_state, last_piece = random_ai_move(game_state, current_player)
                 elif ai_difficulty == "2":  # Minmax AI
                     minmax_state = deepcopy(game_state)
-                    opponent = next(deepcopy(players))
-                    ai_column, ai_score = minimax_ai_move(minmax_state, current_player, opponent, 6, -float('inf'), float('inf'), None,True)
+                    opponent = "A"
+                    ai_column, ai_score = minimax_ai_move(minmax_state, current_player, opponent, 4, -float('inf'), float('inf'), None, True)
                     print("AI score:", ai_score)
                     next_state, last_piece = place_piece(game_state, current_player, ai_column)
                 elif ai_difficulty == "3":  # MCTS AI
@@ -336,6 +335,7 @@ if __name__ == "__main__":
             # If it's the player's turn, ask for input
             else:
                 print("Player " + current_player + "'s turn")
+                # print('PLAYER TURNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN')
                 column = int(input("Column: "))
                 next_state, last_piece = place_piece(game_state, current_player, column)
             if next_state == "Invalid move":
@@ -346,7 +346,8 @@ if __name__ == "__main__":
                 break
         print("_____________")
         print_game_state(game_state)
-        print(score_state(game_state, current_player))
+        print("Current Player", current_player)
+        print("Current Player Score:", score_state(game_state, current_player))
         if game_end(game_state, last_piece):
             print(current_player + " wins!")
             break
