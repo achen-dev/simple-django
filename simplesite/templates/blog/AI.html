@@ -69,7 +69,7 @@
                 {% for item in line %}
                     {% if item == "X" %}
                         <div class="h-100 col bg-secondary">
-                            X
+                            <img src="{% static 'assets/empty_chip.png' %}" class="img-fluid">
                         </div>
                     {% elif item == "A" %}
                         <div class="h-100 col bg-secondary">
