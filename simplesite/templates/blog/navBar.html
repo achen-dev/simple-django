@@ -3,7 +3,9 @@
 {% load static %}
 {% load django_bootstrap5 %}
 {% load bootstrap_icons %}
-{% block bootstrap5_extra_head %}<link rel="icon" type="image/x-icon" href="{% static '/favicon.ico' %}" sizes="16x16"/>{% endblock %}
+{% block bootstrap5_extra_head %}
+<link rel="icon" type="image/x-icon" href="{% static '/favicon.ico' %}" sizes="16x16"/>
+{% endblock %}
 
 {% block title %}Aussar's Django Demo{% endblock %}
 
@@ -22,6 +24,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'MLDemo' %}">&nbsp;&nbsp;&nbsp;ML Demo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'AIDemo' %}">&nbsp;&nbsp;&nbsp;AI Demo</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'blogFeed' %}">&nbsp;&nbsp;&nbsp;Blog Feed</a>

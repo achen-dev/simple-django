@@ -13,6 +13,7 @@ from .views import (
     BlogCreateView,
     BlogDeleteView,
     GameView,
+    AIView,
 )
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
     path('blogDetail/<slug:slug>/delete', BlogDeleteView.as_view(), name='blogDelete'),
     path('blogCreate', BlogCreateView.as_view(), name='blogCreate'),
     path('game', GameView.as_view(), name='game'),
+    path('AIDemo', AIView.as_view(), name='AIDemo'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
