@@ -228,15 +228,15 @@ class AIView(TemplateView):
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
-        print("Post responses")
+        # print("Post responses")
         context = super().get_context_data(**kwargs)
         if request.session.get('cur_context'):
             prev_context = request.session.get('cur_context')
         else:
             prev_context = dict()
-        print(prev_context)
-        print(context)
-        print(context.keys())
+        # print(prev_context)
+        # print(context)
+        # print(context.keys())
 
         if request.POST.get('gamemode'):
             context['gamemode'] = request.POST.get('gamemode')
@@ -269,8 +269,12 @@ class AIView(TemplateView):
                 context['gamewin'] = True
                 context['winner'] = prev_context['current_player']
 
+
             # AI section
-            if context['difficulty'] == "Random":
+            if game_end(game_state, last_piece):
+                pass
+
+            elif context['difficulty'] == "Random":
                 if prev_context['current_player'] == "A":
                     prev_context['current_player'] = "B"
                 else:
@@ -287,9 +291,8 @@ class AIView(TemplateView):
                 minmax_state=deepcopy(next_state)
                 opponent = "A"
                 current_player = "B"
-                ai_column, ai_score = minimax_ai_move(minmax_state, current_player, opponent, 6, -float('inf'),
+                ai_column, ai_score = minimax_ai_move(minmax_state, current_player, opponent, 4, -float('inf'),
                                                       float('inf'), None, True)
-                print("AI score:", ai_score)
                 next_state, last_piece = place_piece(next_state, current_player, ai_column)
                 context['gamestate'] = next_state
                 game_state = next_state

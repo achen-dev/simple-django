@@ -8,24 +8,24 @@
 {% bootstrap_messages %}
 <div class="container-md" style="color:white">
     <h1>AI Agent Demo</h1>
-    gamemode
-    {{ gamemode }}
-    <br>
-    diff
-    {{ difficulty }}
-    <br>
-    gamestate
-    {{ gamestate }}
-    <br>
-    currentplayer
-    {{ current_player }}
-    <br>
-    move
-    {{ move }}
-    <br>
-    Cookie data
-    {{ cookie_data }}
-    <br>
+<!--    gamemode-->
+<!--    {{ gamemode }}-->
+<!--    <br>-->
+<!--    diff-->
+<!--    {{ difficulty }}-->
+<!--    <br>-->
+<!--    gamestate-->
+<!--    {{ gamestate }}-->
+<!--    <br>-->
+<!--    currentplayer-->
+<!--    {{ current_player }}-->
+<!--    <br>-->
+<!--    move-->
+<!--    {{ move }}-->
+<!--    <br>-->
+<!--    Cookie data-->
+<!--    {{ cookie_data }}-->
+<!--    <br>-->
     {% if not gamemode and not difficulty %}
     <form method="post">
         {% csrf_token %}
@@ -65,19 +65,19 @@
     {% endif %}
         <div class="container-md" align="center">
             {% for line in displaystate %}
-                <div class="row" style="height: 100px">
+                <div class="row" style="height: 200px">
                 {% for item in line %}
                     {% if item == "X" %}
                         <div class="h-100 col bg-secondary">
                             X
                         </div>
                     {% elif item == "A" %}
-                        <div class="h-100 col bg-primary">
-                            A
+                        <div class="h-100 col bg-secondary">
+                            <img src="{% static 'assets/blue_chip.png' %}" class="img-fluid">
                         </div>
                     {% elif item == "B" %}
-                        <div class="h-100 col bg-danger">
-                            B
+                        <div class="h-100 col bg-secondary">
+                            <img src="{% static 'assets/red_chip.png' %}" class="img-fluid">
                         </div>
                     {% endif %}
                 {% endfor %}
