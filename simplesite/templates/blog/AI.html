@@ -50,8 +50,8 @@
             <input type="radio" class="btn-check" name="difficulty" id="diff2" autocomplete="off" value="MinMax">
             <label class="btn btn-outline-primary" for="diff2">Medium AI (MinMax)</label>
 
-            <input type="radio" class="btn-check" name="difficulty" id="diff3" autocomplete="off" value="MCTS">
-            <label class="btn btn-outline-primary" for="diff3">Hard AI (Monte Carlo)</label>
+            <input type="radio" class="btn-check" name="difficulty" id="diff3" autocomplete="off" value="MCTS" disabled>
+            <label class="btn btn-outline-primary" for="diff3" >Hard AI (Monte Carlo)</label>
         </div>
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
@@ -68,15 +68,15 @@
                 <div class="row">
                 {% for item in line %}
                     {% if item == "X" %}
-                        <div class="h-100 col bg-secondary">
+                        <div class="h-100 col bg-secondary border">
                             <img src="{% static 'assets/empty_chip.png' %}" class="img-fluid">
                         </div>
                     {% elif item == "A" %}
-                        <div class="h-100 col bg-secondary">
+                        <div class="h-100 col bg-secondary border">
                             <img src="{% static 'assets/blue_chip.png' %}" class="img-fluid">
                         </div>
                     {% elif item == "B" %}
-                        <div class="h-100 col bg-secondary">
+                        <div class="h-100 col bg-secondary border">
                             <img src="{% static 'assets/red_chip.png' %}" class="img-fluid">
                         </div>
                     {% endif %}
